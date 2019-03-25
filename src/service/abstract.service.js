@@ -5,6 +5,7 @@ import axios from 'axios';
 
 export class AbstractService {
     post(url, request: AbstractRequest) {
+        console.log('post.url:%s\nparams:%o', url, request.params);
         axios({
             method: "POST",
             headers: {'Content-type': 'application/json'},
@@ -18,6 +19,7 @@ export class AbstractService {
     }
 
     get(url, request: AbstractRequest) {
+        console.log('post.url:%s\nparams:%o', url, request.params);
         axios({
             method: "get",
             url: url + this.json2param(request.params),
@@ -29,6 +31,7 @@ export class AbstractService {
     }
 
     put(url, request: AbstractRequest) {
+        console.log('put.url:%s\nparams:%o', url, request.params);
         axios({
             method: "put",
             url: url,
@@ -42,7 +45,7 @@ export class AbstractService {
     }
 
     deal = (data, request: AbstractRequest) => {
-        console.log(data);
+        console.log('request.end.data:%o', data);
         let response = data;
         if (response.success) {
             request.success(response.result);
