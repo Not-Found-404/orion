@@ -1,6 +1,7 @@
 import {AbstractService} from "../abstract.service";
+import {AbstractRequest} from "../abstract.request";
 
-export class CommmentCommonService extends AbstractService {
+export class CommentCommonService extends AbstractService {
     /**
      * 创建评价
      * @param request 参数
