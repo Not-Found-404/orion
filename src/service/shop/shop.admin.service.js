@@ -9,19 +9,19 @@ export class ShopAdminService extends ShopCommonService {
      * 创建店铺
      */
     shopCreate = (request: AbstractRequest) => {
-        this.put(
-            '/api/admin/shop/create',
-            request
-        )
+        this.put({
+            url: '/api/admin/shop/create',
+            request: request
+        })
     };
 
     /**
      * 更新店铺
      */
     shopUpdate = (request: AbstractRequest) => {
-        this.post(
-            '/api/admin/shop/update',
-            request
-        )
+        this.post({
+            url: '/api/admin/shop/update',
+            request: request
+        })
     };
 }

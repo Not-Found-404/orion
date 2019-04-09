@@ -2,43 +2,44 @@ import {Icon, notification} from "antd";
 import React from "react";
 import {AbstractRequest} from "./abstract.request";
 import axios from 'axios';
+import {AbstractParam} from "./abstract.param";
 
 export class AbstractService {
-    post(url, request: AbstractRequest) {
-        console.log('post.url:%s\nparams:%o', url, request.params);
+    post(param: AbstractParam) {
+        console.log('post.url:%s\nparams:%o', param.url, param.request.params);
         axios({
             method: "POST",
             headers: {'Content-type': 'application/json'},
-            url: url,
-            data: request.params,
+            url: param.url,
+            data: param.request.params,
         }).then(res => {
-            this.deal(res.data, request)
+            this.deal(res.data, param.request)
         }).catch(error => {
             this.notice(error.message);
         });
     }
 
-    get(url, request: AbstractRequest) {
-        console.log('post.url:%s\nparams:%o', url, request.params);
+    get(param: AbstractParam) {
+        console.log('post.url:%s\nparams:%o', param.url, param.request.params);
         axios({
             method: "get",
-            url: url + this.json2param(request.params),
+            url: param.url + this.json2param(param.request.params),
         }).then((res) => {
-            this.deal(res.data, request)
+            this.deal(res.data, param.request)
         }).catch(error => {
             this.notice(error.message);
         });
     }
 
-    put(url, request: AbstractRequest) {
-        console.log('put.url:%s\nparams:%o', url, request.params);
+    put(param: AbstractParam) {
+        console.log('put.url:%s\nparams:%o', param.url, param.request.params);
         axios({
             method: "put",
-            url: url,
+            url: param.url,
             headers: {'Content-type': 'application/json'},
-            data: request.params,
+            data: param.request.params,
         }).then(res => {
-            this.deal(res.data, request)
+            this.deal(res.data, param.request)
         }).catch(error => {
             this.deal(error.message);
         });

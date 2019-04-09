@@ -12,10 +12,9 @@ export class ShopWebService extends ShopCommonService {
      * @param request
      */
     shopGetDetail = (request: AbstractRequest) => {
-        console.log('method:{},params:{}', "shopGetDetail", request.params);
-        this.post(
-            '/api/web/shop/get/detail',
-            request
-        );
+        this.post({
+            url: '/api/web/shop/get/detail',
+            request: request
+        });
     }
 }
