@@ -7,6 +7,7 @@ import moment from 'moment';
 import 'moment/locale/zh-cn';
 import "antd/dist/antd.css";
 import "./index.css";
+import {MainFrame} from "./test/main/main.frame";
 
 moment.locale('zh-cn');
 
@@ -22,14 +23,7 @@ class App extends React.Component {
   render() {
     const { date } = this.state;
     return (
-      <LocaleProvider locale={zhCN}>
-        <div style={{ width: 400, margin: '100px auto' }}>
-          <DatePicker onChange={this.handleChange} />
-          <div style={{ marginTop: 20 }}>
-            当前日期：{date ? date.format('YYYY-MM-DD') : '未选择'}
-          </div>
-        </div>
-      </LocaleProvider>
+      <MainFrame/>
     );
   }
 }
