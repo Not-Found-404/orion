@@ -1,15 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { MainFrame } from "./test/main/main.frame";
+import { Home } from "./view/home/home";
 import "antd/dist/antd.css";
 import "./index.css";
 
 class App extends React.Component {
   render() {
     return (
-      <MainFrame />
+      <div className="layout-container">
+        <Home />
+      </div>
     );
   }
 }
 
+// 渲染函数
 ReactDOM.render(<App />, document.getElementById('root'));
