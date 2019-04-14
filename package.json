@@ -26,7 +26,7 @@
     "not op_mini all"
   ],
   "description": "O2O management plantform.",
-  "main": "app.js",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Not-Found-404/orion.git"
