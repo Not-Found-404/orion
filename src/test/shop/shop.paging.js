@@ -25,6 +25,10 @@ export class ShopPaging extends Component {
         dataIndex: 'name',
         key: 'name',
     }, {
+        title: '联系电话',
+        dataIndex: 'mobile',
+        key: 'mobile',
+    }, {
         title: '卖家id',
         dataIndex: 'userId',
         key: 'userId',
