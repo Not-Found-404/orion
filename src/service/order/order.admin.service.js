@@ -2,7 +2,7 @@ import {OrderCommonService} from "./order.common.service";
 import {AbstractRequest} from "../abstract.request";
 
 export class OrderAdminService extends OrderCommonService {
-    orderUpdate = (request: AbstractRequest) => {
+    orderUpdate = (request) => {
         console.log('商家订单级更新');
         this.get({
             url: '/api/admin/order/update',
@@ -14,7 +14,7 @@ export class OrderAdminService extends OrderCommonService {
      * 订单分页
      * @param request 参数
      */
-    paging = (request: AbstractRequest) => {
+    paging = (request) => {
         console.log('订单分页');
         this.get({
             url: '/api/admin/order/paging',

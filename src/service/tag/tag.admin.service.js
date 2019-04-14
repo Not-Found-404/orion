@@ -6,7 +6,7 @@ export class TagAdminService extends TagCommonService {
      * 创建店铺标签
      * @param request 参数
      */
-    create = (request: AbstractRequest) => {
+    create = (request) => {
         console.log('创建店铺标签');
         this.get({
             url: '/api/admin/tag/create',
@@ -18,7 +18,7 @@ export class TagAdminService extends TagCommonService {
      * 更新店铺标签
      * @param request 参数
      */
-    update = (request: AbstractRequest) => {
+    update = (request) => {
         console.log('更新店铺标签');
         this.get({
             url: '/api/admin/tag/update',

@@ -5,7 +5,7 @@ import axios from 'axios';
 import {AbstractParam} from "./abstract.param";
 
 export class AbstractService {
-    post(param: AbstractParam) {
+    post(param) {
         console.log('post.url:%s\nparams:%o', param.url, param.request.params);
         axios({
             method: "POST",
@@ -19,7 +19,7 @@ export class AbstractService {
         });
     }
 
-    get(param: AbstractParam) {
+    get(param) {
         console.log('post.url:%s\nparams:%o', param.url, param.request.params);
         axios({
             method: "get",
@@ -31,7 +31,7 @@ export class AbstractService {
         });
     }
 
-    put(param: AbstractParam) {
+    put(param) {
         console.log('put.url:%s\nparams:%o', param.url, param.request.params);
         axios({
             method: "put",
@@ -45,7 +45,7 @@ export class AbstractService {
         });
     }
 
-    deal = (data, request: AbstractRequest) => {
+    deal = (data, request) => {
         console.log('request.end.data:%o', data);
         let response = data;
         if (response.success) {

@@ -6,7 +6,7 @@ export class ItemAdminService extends ItemCommonService {
      * 调整库存
      * @param request 参数
      */
-    inventoryAdjust = (request: AbstractRequest) => {
+    inventoryAdjust = (request) => {
         console.log('调整库存');
         this.post({
             url: '/api/admin/item/adjust',
@@ -18,7 +18,7 @@ export class ItemAdminService extends ItemCommonService {
      * 创建商品
      * @param request 参数
      */
-    createItem = (request: AbstractRequest) => {
+    createItem = (request) => {
         console.log('创建商品');
         this.put({
             url: '/api/admin/item/create',
@@ -30,7 +30,7 @@ export class ItemAdminService extends ItemCommonService {
      * 商品分页
      * @param request 参数
      */
-    paging = (request: AbstractRequest) => {
+    paging = (request) => {
         console.log('商品分页');
         this.get({
             url: '/api/admin/item/paging',
@@ -42,7 +42,7 @@ export class ItemAdminService extends ItemCommonService {
      * 修改商品信息
      * @param request
      */
-    update = (request: AbstractRequest) => {
+    update = (request) => {
         console.log('修改商品信息');
         this.post({
             url: '/api/admin/item/update',
