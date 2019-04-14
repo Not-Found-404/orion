@@ -109,3 +109,5 @@ export class UserCommonService extends AbstractService {
     };
 
 }
+
+export default UserCommonService;
