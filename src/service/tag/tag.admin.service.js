@@ -25,4 +25,16 @@ export class TagAdminService extends TagCommonService {
             request: request
         });
     };
+
+    /**
+     * 删除店铺标签
+     * @param request 请求参数
+     */
+    delete = (request) => {
+        console.log('删除店铺标签');
+        this.post({
+            url: '/api/admin/tag/delete',
+            request: request
+        });
+    }
 }

@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
-import {Table, Divider, Tag, Avatar, Form, Row, Col, Input, Button, Icon, Select} from 'antd';
+import {Table, Modal} from 'antd';
 import {TagAdminService} from "../../service/tag/tag.admin.service";
+
+const confirm = Modal.confirm;
 
 export class TagPaging extends Component {
     tagAdminService = new TagAdminService();
@@ -29,14 +31,45 @@ export class TagPaging extends Component {
         key: 'content',
     }, {
         title: '操作',
-        dataIndex: 'status',
         key: 'enable',
+        width: 100,
         render: (text, record) => {
             return (
-                <a>删除</a>
+                <div>
+                    <a>编辑</a>
+                </div>
+            );
+        }
+    }, {
+        title: '',
+        key: 'delete',
+        width: 100,
+        render: (text, record) => {
+            return (
+                <a onClick={() => this.deleteTag(record.tagId)}>删除</a>
             );
         }
     }];
+
+    deleteTag = (tagId) => {
+        confirm({
+            title: '确认删除?',
+            content: '标签以及标签与店铺的关联都将被删除',
+            onOk() {
+                // this.tagAdminService.delete({
+                //     params: {
+                //         tagId: tagId
+                //     },
+                //     success: (data) => {
+                //         this.setDate();
+                //     }
+                // })
+            },
+            onCancel() {
+                // do nothing
+            },
+        });
+    };
 
     setData = () => {
         this.setState({
