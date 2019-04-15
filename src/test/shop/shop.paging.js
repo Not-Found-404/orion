@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {Table, Divider, Tag, Avatar, Form, Row, Col, Input, Button, Icon, Select} from 'antd';
 import {ShopAdminService} from "../../service/shop/shop.admin.service";
 
+const {Option} = Select;
+
 export class ShopPaging extends Component {
 
     shopAdminService = new ShopAdminService();
@@ -14,6 +16,10 @@ export class ShopPaging extends Component {
         data: [],
         pagination: {},
         loading: true,
+        shopIdParam: null,
+        shopNameParam: null,
+        userIdParam: null,
+        mobileParam: null
     };
 
     columns = [{
@@ -54,20 +60,40 @@ export class ShopPaging extends Component {
         dataIndex: 'status',
         key: 'enable',
         render: (text, record) => {
-            let enbale = !(record.status === 1);
-            let enbaleText = enbale ? '解冻' : '冻结';
+            let enable = !(record.status === 1);
+            let enableText = enable ? '解冻' : '冻结';
             return (
-                <a onClick={() => this.enableStatus(record.userId, enbale)}>{enbaleText}</a>
+                <a onClick={() => this.enableStatus(record.shopId, enable)}>{enableText}</a>
             );
         }
     }];
 
+    enableStatus = (shopId, enbale) => {
+        let status = enbale ? 1 : -2;
+        this.shopAdminService.shopUpdate({
+            params: {
+                shopId: shopId,
+                status: status
+            },
+            success: (data) => {
+                this.setData();
+            }
+        })
+    };
+
     setData = () => {
+
+        let searchParam = {
+            shopId: this.state.shopIdParam,
+            name: this.state.shopNameParam,
+            userId: this.state.userIdParam,
+            mobile: this.state.mobileParam
+        };
         this.setState({
             loading: true,
         });
         this.shopAdminService.shopPaging({
-            params: null,
+            params: searchParam,
             success: (data) => {
                 this.setState({
                     data: data.data,
@@ -77,13 +103,71 @@ export class ShopPaging extends Component {
         })
     };
 
+    inputChangeHandler = (e) => {
+        let o = {};
+        o[e.target.name] = e.target.value;
+        this.setState(o);
+    }
+
+    getFields = () => {
+        const searchParamsInput = [];
+        searchParamsInput.push(
+            <Col span={6} key={1}>
+                <Form.Item label={`店铺id`}>
+                    <Input onChange={this.inputChangeHandler} name="shopIdParam" placeholder="输入手机号"/>
+                </Form.Item>
+            </Col>
+        );
+        searchParamsInput.push(
+            <Col span={6} key={2}>
+                <Form.Item label={`店铺名`}>
+                    <Input onChange={this.inputChangeHandler} name="shopNameParam" placeholder="输入店铺名"/>
+                </Form.Item>
+            </Col>
+        );
+        searchParamsInput.push(
+            <Col span={6} key={3}>
+                <Form.Item label={`卖家id`}>
+                    <Input onChange={this.inputChangeHandler} name="userIdParam" placeholder="输入用户id"/>
+                </Form.Item>
+            </Col>
+        );
+        searchParamsInput.push(
+            <Col span={6} key={4}>
+                <Form.Item label={`联系电话`}>
+                    <Input onChange={this.inputChangeHandler} name="mobileParam" placeholder="输入联系电话"/>
+                </Form.Item>
+            </Col>
+        );
+        return searchParamsInput;
+    };
+
+
     render() {
         return (
-            <Table
-                columns={this.columns}
-                dataSource={this.state.data}
-                loading={this.state.loading}
-            />
+            <div>
+                <Form
+                    className="ant-advanced-search-form"
+                    onSubmit={this.handleSearch}
+                >
+                    <Row gutter={24}>{this.getFields()}</Row>
+                    <Row>
+                        <Col span={24} style={{textAlign: 'right'}}>
+                            <Button type="primary" onClick={() => {
+                                this.setData()
+                            }}>搜索</Button>
+                            <Button style={{marginLeft: 8}} onClick={this.setData}>
+                                重置
+                            </Button>
+                        </Col>
+                    </Row>
+                    <Table
+                        columns={this.columns}
+                        dataSource={this.state.data}
+                        loading={this.state.loading}
+                    />
+                </Form>
+            </div>
         )
     }
 }
