@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import {Table, Form, Row, Col, Input, Button} from 'antd';
-import {ShopAdminService} from "../../service/shop/shop.admin.service";
+import {Table, Form, Row, Col, Input, Button, Rate} from 'antd';
+import {CommentAdminService} from "../../service/comment/comment.admin.service";
 
-export class ShopPaging extends Component {
+export class CommentPaging extends Component {
 
-    shopAdminService = new ShopAdminService();
+    commentAdminService = new CommentAdminService();
 
     componentDidMount() {
         this.setData();
@@ -14,43 +14,77 @@ export class ShopPaging extends Component {
         data: [],
         pagination: {},
         loading: true,
-        shopIdParam: null,
-        shopNameParam: null,
-        userIdParam: null,
-        mobileParam: null
+        orderIdParam: null
     };
 
+    add0 = (m) => {
+        return m < 10 ? '0' + m : m
+    };
+
+    formatTime = (unixTime) => {
+        let time = new Date(unixTime);
+        let y = time.getFullYear();
+        let m = time.getMonth() + 1;
+        let d = time.getDate();
+        let h = time.getHours();
+        let mm = time.getMinutes();
+        let s = time.getSeconds();
+        return y + '-' + this.add0(m) + '-' + this.add0(d) + ' ' + this.add0(h) + ':' + this.add0(mm) + ':' + this.add0(s);
+    }
+
     columns = [{
-        title: '店铺Id',
-        dataIndex: 'shopId',
-        key: 'shopId',
+        title: '订单id',
+        dataIndex: 'orderId',
+        key: 'orderId',
+    }, {
+        title: '评分',
+        dataIndex: 'rate',
+        key: 'rate',
+        render: rate => {
+            return (<Rate disabled defaultValue={rate}/>)
+        }
+    }, {
+        title: '评价内容',
+        dataIndex: 'context',
+        key: 'context',
+    }, {
+        title: '创建时间',
+        dataIndex: 'createdAt',
+        key: 'createdAt',
+        render: createdAt => {
+            return this.formatTime(createdAt);
+        }
     }, {
         title: '店铺名',
-        dataIndex: 'name',
-        key: 'name',
+        dataIndex: 'extra',
+        key: 'shopName',
+        render: extra => {
+            return extra.shopName != null ? extra.shopName : "";
+        }
     }, {
-        title: '联系电话',
-        dataIndex: 'mobile',
-        key: 'mobile',
-    }, {
-        title: '卖家id',
-        dataIndex: 'userId',
-        key: 'userId',
-    }, {
-        title: '卖家姓名',
+        title: '买家用户名',
         dataIndex: 'userName',
         key: 'userName'
+    }, {
+        title: '卖家手机号',
+        dataIndex: 'extra',
+        key: 'buyerPhone',
+        render: extra => {
+            if (extra.buyerPhone != null) {
+                return extra.buyerPhone
+            } else {
+                return "";
+            }
+        }
     }, {
         title: '状态',
         dataIndex: 'status',
         key: 'status',
         render: status => {
             if (status === 1) {
-                return '营业中'
-            } else if (status === -1) {
-                return '歇业中'
+                return '显示'
             } else if (status === -2) {
-                return '冻结中'
+                return '隐藏'
             }
         }
     }, {
@@ -59,18 +93,18 @@ export class ShopPaging extends Component {
         key: 'enable',
         render: (text, record) => {
             let enable = !(record.status === 1);
-            let enableText = enable ? '解冻' : '冻结';
+            let enableText = enable ? '显示' : '隐藏';
             return (
-                <a onClick={() => this.enableStatus(record.shopId, enable)}>{enableText}</a>
+                <a onClick={() => this.enableStatus(record.commentId, enable)}>{enableText}</a>
             );
         }
     }];
 
-    enableStatus = (shopId, enbale) => {
-        let status = enbale ? 1 : -2;
-        this.shopAdminService.shopUpdate({
+    enableStatus = (commentId, enable) => {
+        let status = enable ? 1 : -2;
+        this.commentAdminService.enable({
             params: {
-                shopId: shopId,
+                commentId: commentId,
                 status: status
             },
             success: (data) => {
@@ -80,17 +114,13 @@ export class ShopPaging extends Component {
     };
 
     setData = () => {
-
         let searchParam = {
-            shopId: this.state.shopIdParam,
-            name: this.state.shopNameParam,
-            userId: this.state.userIdParam,
-            mobile: this.state.mobileParam
+            orderId: this.state.orderIdParam
         };
         this.setState({
-            loading: true,
+            loading: true
         });
-        this.shopAdminService.shopPaging({
+        this.commentAdminService.paging({
             params: searchParam,
             success: (data) => {
                 this.setState({
@@ -98,7 +128,7 @@ export class ShopPaging extends Component {
                     loading: false
                 })
             }
-        })
+        });
     };
 
     inputChangeHandler = (e) => {
@@ -111,35 +141,13 @@ export class ShopPaging extends Component {
         const searchParamsInput = [];
         searchParamsInput.push(
             <Col span={6} key={1}>
-                <Form.Item label={`店铺id`}>
-                    <Input onChange={this.inputChangeHandler} name="shopIdParam" placeholder="输入手机号"/>
-                </Form.Item>
-            </Col>
-        );
-        searchParamsInput.push(
-            <Col span={6} key={2}>
-                <Form.Item label={`店铺名`}>
-                    <Input onChange={this.inputChangeHandler} name="shopNameParam" placeholder="输入店铺名"/>
-                </Form.Item>
-            </Col>
-        );
-        searchParamsInput.push(
-            <Col span={6} key={3}>
-                <Form.Item label={`卖家id`}>
-                    <Input onChange={this.inputChangeHandler} name="userIdParam" placeholder="输入用户id"/>
-                </Form.Item>
-            </Col>
-        );
-        searchParamsInput.push(
-            <Col span={6} key={4}>
-                <Form.Item label={`联系电话`}>
-                    <Input onChange={this.inputChangeHandler} name="mobileParam" placeholder="输入联系电话"/>
+                <Form.Item label={`订单id`}>
+                    <Input onChange={this.inputChangeHandler} name="orderIdParam" placeholder="输入订单编号"/>
                 </Form.Item>
             </Col>
         );
         return searchParamsInput;
     };
-
 
     render() {
         return (
