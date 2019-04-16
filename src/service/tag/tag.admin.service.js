@@ -8,7 +8,7 @@ export class TagAdminService extends TagCommonService {
      */
     create = (request: AbstractRequest) => {
         console.log('创建店铺标签');
-        this.get({
+        this.put({
             url: '/api/admin/tag/create',
             request: request
         });
@@ -20,7 +20,7 @@ export class TagAdminService extends TagCommonService {
      */
     update = (request: AbstractRequest) => {
         console.log('更新店铺标签');
-        this.get({
+        this.post({
             url: '/api/admin/tag/update',
             request: request
         });

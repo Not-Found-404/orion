@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Table, Modal} from 'antd';
+import {Table, Modal, Drawer, Row, Col, Button, Form, Input} from 'antd';
 import {TagAdminService} from "../../service/tag/tag.admin.service";
 
 const confirm = Modal.confirm;
@@ -11,6 +11,8 @@ export class TagPaging extends Component {
         data: [],
         pagination: {},
         loading: true,
+        createDrawerVisible: false,
+        createTagLoading: false,
     };
 
     componentDidMount() {
@@ -36,7 +38,7 @@ export class TagPaging extends Component {
         render: (text, record) => {
             return (
                 <div>
-                    <a>编辑</a>
+                    <a onClick={() => this.updateTag(record)}>编辑</a>
                 </div>
             );
         }
@@ -51,19 +53,23 @@ export class TagPaging extends Component {
         }
     }];
 
+    updateTag = (record) => {
+
+    };
+
     deleteTag = (tagId) => {
         confirm({
             title: '确认删除?',
             content: '标签以及标签与店铺的关联都将被删除',
-            onOk() {
-                // this.tagAdminService.delete({
-                //     params: {
-                //         tagId: tagId
-                //     },
-                //     success: (data) => {
-                //         this.setDate();
-                //     }
-                // })
+            onOk: () => {
+                this.tagAdminService.delete({
+                    params: {
+                        tagId: tagId
+                    },
+                    success: (data) => {
+                        this.setData();
+                    }
+                })
             },
             onCancel() {
                 // do nothing
@@ -86,13 +92,91 @@ export class TagPaging extends Component {
         })
     };
 
+    createDrawerOnClose = () => {
+        this.setState({
+            createDrawerVisible: false
+        })
+    };
+
+    getDrawer = () => {
+        const createDrawer = [];
+        createDrawer.push(<Drawer
+            title="创建新标签"
+            width={360}
+            onClose={this.createDrawerOnClose}
+            visible={this.state.createDrawerVisible}
+            placement={"right"}
+        >
+            <Row>
+                <Col span={24} key={1}>
+                    <Form.Item label={`标签名`}>
+                        <Input onChange={this.inputChangeHandler} name="tagCreateNameParam" placeholder="输入标签名"/>
+                    </Form.Item>
+                </Col>
+            </Row>
+            <Row>
+                <Col span={24} key={1}>
+                    <Form.Item label={`标签内容`}>
+                        <Input onChange={this.inputChangeHandler} name="tagCreateContentParam" placeholder="输入标签内容"/>
+                    </Form.Item>
+                </Col>
+            </Row>
+            <Row>
+                <Col span={24} key={1} style={{textAlign: 'right'}}>
+                    <Button loading={this.state.createTagLoading} onClick={() => this.createTag()} type="primary">创建标签</Button>
+                </Col>
+            </Row>
+        </Drawer>);
+        return createDrawer;
+    };
+
     render() {
         return (
-            <Table
-                columns={this.columns}
-                dataSource={this.state.data}
-                loading={this.state.loading}
-            />
+            <div>
+                <Row>
+                    <Col span={24} style={{textAlign: 'left'}}>
+                        <Button type="primary" onClick={() => {
+                            this.setState({
+                                createDrawerVisible: true
+                            })
+                        }}>创建新标签</Button>
+                    </Col>
+                </Row>
+                {this.getDrawer()}
+                <Table
+                    columns={this.columns}
+                    dataSource={this.state.data}
+                    loading={this.state.loading}
+                />
+            </div>
         )
+    }
+
+    inputChangeHandler = (e) => {
+        let o = {};
+        o[e.target.name] = e.target.value;
+        this.setState(o);
+    };
+
+    createTag = () => {
+        this.setState({
+            createTagLoading:true
+        });
+        let createParam = {
+            name: this.state.tagCreateNameParam,
+            content: this.state.tagCreateContentParam
+        };
+        this.tagAdminService.create({
+            params: createParam,
+            success: (data) => {
+                this.createDrawerOnClose();
+                this.setData();
+            },
+            final:()=>{
+                this.setState({
+                    createTagLoading:false
+                });
+            }
+        });
     }
 }
