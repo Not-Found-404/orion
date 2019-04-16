@@ -13,6 +13,8 @@ export class TagPaging extends Component {
         loading: true,
         createDrawerVisible: false,
         createTagLoading: false,
+        updateModalVisible: false,
+        updateLoading: false
     };
 
     componentDidMount() {
@@ -38,7 +40,7 @@ export class TagPaging extends Component {
         render: (text, record) => {
             return (
                 <div>
-                    <a onClick={() => this.updateTag(record)}>编辑</a>
+                    <a onClick={() => this.showUpdateModal(record.tagId)}>编辑</a>
                 </div>
             );
         }
@@ -53,8 +55,27 @@ export class TagPaging extends Component {
         }
     }];
 
-    updateTag = (record) => {
-
+    updateTag = () => {
+        this.setState({
+            updateLoading: true
+        });
+        let updateParams = {
+            tagId: this.state.updateTagId,
+            name: this.state.tagUpdateNameParam,
+            content: this.state.tagUpdateContentParam
+        };
+        this.tagAdminService.update({
+            params: updateParams,
+            success: (data) => {
+                this.closeUpdateModal();
+                this.setData();
+            },
+            final: () => {
+                this.setState({
+                    updateLoading: false
+                });
+            }
+        })
     };
 
     deleteTag = (tagId) => {
@@ -77,6 +98,22 @@ export class TagPaging extends Component {
         });
     };
 
+    showUpdateModal = (tagId) => {
+        this.setState({
+            updateModalVisible: true,
+            updateTagId: tagId
+        });
+    };
+
+
+    closeUpdateModal = () => {
+        this.setState({
+            updateModalVisible: false,
+            updateLoading: false
+        });
+    };
+
+
     setData = () => {
         this.setState({
             loading: true,
@@ -96,6 +133,38 @@ export class TagPaging extends Component {
         this.setState({
             createDrawerVisible: false
         })
+    };
+
+    getModal = () => {
+        const modal = [];
+        modal.push(
+            <Modal
+                visible={this.state.updateModalVisible}
+                title="更新标签"
+                onCancel={this.closeUpdateModal}
+                footer={[
+                    <Button key="back" onClick={this.closeUpdateModal}>取消</Button>,
+                    <Button key="submit" type="primary" loading={this.state.updateLoadingoa} onClick={() => {
+                        this.updateTag()
+                    }}>
+                        确认
+                    </Button>,
+                ]}
+            >
+                <Row>
+                    <Col span={24} key={1}>
+                        <Form.Item label={`标签名`}>
+                            <Input onChange={this.inputChangeHandler} name="tagUpdateNameParam" placeholder="输入标签名"/>
+                        </Form.Item>
+                        <Form.Item label={`标签内容`}>
+                            <Input onChange={this.inputChangeHandler} name="tagUpdateContentParam"
+                                   placeholder="输入标签内容"/>
+                        </Form.Item>
+                    </Col>
+                </Row>
+            </Modal>
+        );
+        return modal;
     };
 
     getDrawer = () => {
@@ -123,7 +192,8 @@ export class TagPaging extends Component {
             </Row>
             <Row>
                 <Col span={24} key={1} style={{textAlign: 'right'}}>
-                    <Button loading={this.state.createTagLoading} onClick={() => this.createTag()} type="primary">创建标签</Button>
+                    <Button loading={this.state.createTagLoading} onClick={() => this.createTag()}
+                            type="primary">创建标签</Button>
                 </Col>
             </Row>
         </Drawer>);
@@ -133,6 +203,8 @@ export class TagPaging extends Component {
     render() {
         return (
             <div>
+                {this.getModal()}
+                {this.getDrawer()}
                 <Row>
                     <Col span={24} style={{textAlign: 'left'}}>
                         <Button type="primary" onClick={() => {
@@ -142,7 +214,7 @@ export class TagPaging extends Component {
                         }}>创建新标签</Button>
                     </Col>
                 </Row>
-                {this.getDrawer()}
+                <br/>
                 <Table
                     columns={this.columns}
                     dataSource={this.state.data}
@@ -154,13 +226,13 @@ export class TagPaging extends Component {
 
     inputChangeHandler = (e) => {
         let o = {};
-        o[e.target.name] = e.target.value;
+        o[e.target.name] = e.target.value === "" ? null : e.target.value;
         this.setState(o);
     };
 
     createTag = () => {
         this.setState({
-            createTagLoading:true
+            createTagLoading: true
         });
         let createParam = {
             name: this.state.tagCreateNameParam,
@@ -172,9 +244,9 @@ export class TagPaging extends Component {
                 this.createDrawerOnClose();
                 this.setData();
             },
-            final:()=>{
+            final: () => {
                 this.setState({
-                    createTagLoading:false
+                    createTagLoading: false
                 });
             }
         });

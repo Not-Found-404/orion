@@ -65,7 +65,7 @@ export class MainFrame extends Component {
                             </Menu>
                         </Sider>
                         <Content style={{ padding: '0 24px', minHeight: 280 }}>
-                            <UserPaging/>
+                            <TagPaging/>
                         </Content>
                     </Layout>
                 </Content>
