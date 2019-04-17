@@ -1,8 +1,6 @@
 import {Icon, notification} from "antd";
 import React from "react";
-import {AbstractRequest} from "./abstract.request";
 import axios from 'axios';
-import {AbstractParam} from "./abstract.param";
 
 export class AbstractService {
     post(param) {

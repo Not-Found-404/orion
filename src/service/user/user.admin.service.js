@@ -1,6 +1,4 @@
 import UserCommonService from "./user.common.service";
-import {AbstractRequest} from "../abstract.request";
-
 /**
  * 用户admin服务
  */
