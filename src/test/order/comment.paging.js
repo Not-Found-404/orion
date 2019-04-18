@@ -167,6 +167,7 @@ export class CommentPaging extends Component {
                             </Button>
                         </Col>
                     </Row>
+                    <br/>
                     <Table
                         columns={this.columns}
                         dataSource={this.state.data}
