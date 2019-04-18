@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Table, Divider, Tag, Avatar, Form, Row, Col, Input, Button, Icon, Select} from 'antd';
+import {Table, Avatar, Form, Row, Col, Input, Button, Select} from 'antd';
 import {UserAdminService} from "../../service/user/user.admin.service";
 
 const {Option} = Select;
@@ -127,6 +127,8 @@ export class UserPaging extends Component {
                     mobileParam: value
                 });
                 break;
+            default:
+              break;
         }
     };
 

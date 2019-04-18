@@ -8,7 +8,7 @@ export class ShopAdminService extends ShopCommonService {
     /**
      * 创建店铺
      */
-    shopCreate = (request: AbstractRequest) => {
+    shopCreate = (request) => {
         this.put({
             url: '/api/admin/shop/create',
             request: request
@@ -18,7 +18,7 @@ export class ShopAdminService extends ShopCommonService {
     /**
      * 更新店铺
      */
-    shopUpdate = (request: AbstractRequest) => {
+    shopUpdate = (request) => {
         this.post({
             url: '/api/admin/shop/update',
             request: request

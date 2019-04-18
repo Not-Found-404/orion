@@ -6,7 +6,7 @@ export class OrderCommonService extends AbstractService {
      * 查看订单详情
      * @param request 参数
      */
-    getDetail = (request: AbstractRequest) => {
+    getDetail = (request) => {
         console.log('查看订单详情');
         this.get({
             url: '/api/common/order/get/detail',

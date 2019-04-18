@@ -1,12 +1,11 @@
 import {AbstractService} from "../abstract.service";
-import {AbstractRequest} from "../abstract.request";
 
 export class UserCommonService extends AbstractService {
 
     /**
      * 当前用户信息
      */
-    getUserInfo = (request: AbstractRequest) => {
+    getUserInfo = (request) => {
         console.log('获取当前登录用户');
         this.get({
             url: '/api/common/user/current/user/info',
@@ -18,7 +17,7 @@ export class UserCommonService extends AbstractService {
      * 检查邮箱是否已被使用
      * @param request
      */
-    isExistEmail = (request: AbstractRequest) => {
+    isExistEmail = (request) => {
         console.log('检查邮箱是否已被使用');
         this.get({
             url: '/api/common/user/exist/email',
@@ -29,7 +28,7 @@ export class UserCommonService extends AbstractService {
     /**
      * 判断手机号是否存在
      */
-    judgeMobilePhone = (request: AbstractRequest) => {
+    judgeMobilePhone = (request) => {
         console.log('判断手机号是否存在');
         this.get({
             url: '/api/common/user/exist/mobile',
@@ -41,7 +40,7 @@ export class UserCommonService extends AbstractService {
      * 用户名是否已存在
      * @param request
      */
-    isExistUserName = (request: AbstractRequest) => {
+    isExistUserName = (request) => {
         console.log('用户名是否已存在');
         this.get({
             url: '/api/common/user/exist/nickname',
@@ -52,7 +51,7 @@ export class UserCommonService extends AbstractService {
     /**
      * 用户进行登录
      */
-    login = (request: AbstractRequest) => {
+    login = (request) => {
         console.log('用户登录' + request.params);
         this.post({
             url: '/api/common/user/login',
@@ -64,7 +63,7 @@ export class UserCommonService extends AbstractService {
      * 注销
      * @param request 参数
      */
-    logout = (request: AbstractRequest) => {
+    logout = (request) => {
         console.log('注销');
         this.get({
             url: '/api/common/user/logout',
@@ -76,7 +75,7 @@ export class UserCommonService extends AbstractService {
      * 修改信息
      * @param request 参数
      */
-    modify = (request: AbstractRequest) => {
+    modify = (request) => {
         console.log('修改信息');
         this.post({
             url: '/api/common/user/modify',
@@ -88,7 +87,7 @@ export class UserCommonService extends AbstractService {
      * 注册
      * @param request 参数
      */
-    register = (request: AbstractRequest) => {
+    register = (request) => {
         console.log('注册');
         this.post({
             url: '/api/common/user/register',
@@ -100,7 +99,7 @@ export class UserCommonService extends AbstractService {
     /**
      * 发送验证码
      */
-    sendSms = (request: AbstractRequest) => {
+    sendSms = (request) => {
         console.log('发送验证码');
         this.post({
             url: '/api/common/user/send/register/verification/sms',

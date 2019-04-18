@@ -6,7 +6,7 @@ export class CommentCommonService extends AbstractService {
      * 创建评价
      * @param request 参数
      */
-    cteate = (request: AbstractRequest) => {
+    cteate = (request) => {
         console.log('创建评价');
         this.post({
             url: '/api/common/comment/create',
@@ -18,7 +18,7 @@ export class CommentCommonService extends AbstractService {
      * 查看评价详情
      * @param request 参数
      */
-    getDetail = (request: AbstractRequest) => {
+    getDetail = (request) => {
         console.log('查看评价详情');
         this.get({
             url: '/api/common/comment/get',
@@ -30,7 +30,7 @@ export class CommentCommonService extends AbstractService {
      * 评价分页
      * @param request 参数
      */
-    paging = (request: AbstractRequest) => {
+    paging = (request) => {
         console.log('评价分页');
         this.get({
             url: '/api/common/comment/paging',
