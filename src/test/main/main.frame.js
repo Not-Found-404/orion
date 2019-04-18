@@ -3,6 +3,9 @@ import {
     Layout, Menu, Breadcrumb, Icon,
 } from 'antd';
 import {UserPaging} from "../user/user.paging";
+import {TagPaging} from "../tag/tag.paging";
+import {ShopPaging} from "../shop/shop.paging";
+import {CommentPaging} from "../order/comment.paging";
 
 const { SubMenu } = Menu;
 const {
@@ -62,7 +65,7 @@ export class MainFrame extends Component {
                             </Menu>
                         </Sider>
                         <Content style={{ padding: '0 24px', minHeight: 280 }}>
-                            <UserPaging/>
+                            <CommentPaging/>
                         </Content>
                     </Layout>
                 </Content>

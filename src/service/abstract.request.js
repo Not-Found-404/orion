@@ -1,4 +1,6 @@
 export class AbstractRequest {
-    params;
-    success(){};
+    params: {};
+    success: ()=>{};
+    error: ()=>{};
+    final: ()=>{};
 }

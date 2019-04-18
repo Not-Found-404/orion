@@ -20,13 +20,21 @@ export class MenuLayout extends React.Component {
           </Menu.Item>
         </SubMenu>
         <SubMenu key="sub2" title={<span><Icon type="shop" />店铺</span>}>
-          <Menu.Item key="2">创建店铺</Menu.Item>
-          <Menu.Item key="3">店铺标签</Menu.Item>
-          <Menu.Item key="4">店铺管理</Menu.Item>
+          <Menu.Item key="2">
+            创建店铺
+          </Menu.Item>
+          <Menu.Item key="3">
+            <Link to="/tagManage/">店铺标签</Link>
+          </Menu.Item>
+          <Menu.Item key="4">
+            <Link to="/shopManage/">店铺管理</Link>
+          </Menu.Item>
         </SubMenu>
         <SubMenu key="sub3" title={<span><Icon type="pay-circle" />交易</span>}>
           <Menu.Item key="9">订单管理</Menu.Item>
-          <Menu.Item key="10">评价管理</Menu.Item>
+          <Menu.Item key="10">
+            <Link to="/commentManage/">评价管理</Link>
+          </Menu.Item>
         </SubMenu>
       </Menu>
     )

@@ -3,7 +3,10 @@ import { Layout } from 'antd';
 import { UserPaging } from '../../component/user/user.paging';
 import { MenuLayout } from '../../component/menu/menu-layout';
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import './home.css'; // 引入样式表
+import './home.css';
+import {CommentPaging} from "../../component/order/comment.paging";
+import {ShopPaging} from "../../component/shop/shop.paging";
+import {TagPaging} from "../../component/shop/tag.paging"; // 引入样式表
 
 // 界面控件
 const {
@@ -30,7 +33,9 @@ export class Home extends React.Component {
                   <Content className="content-container">
                     {/* 在此切换组件 */}
                     <Route path="/userManage" component={UserPaging} />
-
+                    <Route path="/commentManage" component={CommentPaging} />
+                    <Route path="/shopManage" component={ShopPaging} />
+                    <Route path="/tagManage" component={TagPaging} />
                   </Content>
                 </Layout>
               </Content>
