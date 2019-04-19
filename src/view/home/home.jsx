@@ -1,12 +1,9 @@
 import React from 'react';
 import { Layout, Icon } from 'antd';
-import { UserPaging } from '../../component/user/user.paging';
 import { MenuLayout } from '../../component/menu/menu-layout';
-import { BrowserRouter as Router, Route } from "react-router-dom";
-import './home.css';
-import { CommentPaging } from "../../component/order/comment.paging";
-import { ShopPaging } from "../../component/shop/shop.paging";
-import { TagPaging } from "../../component/shop/tag.paging"; // 引入样式表
+import { BrowserRouter as Router} from "react-router-dom";
+import { HomeRoute } from "../route/home.route";
+import './home.css'; // 引入样式表
 
 // 界面控件
 const {
@@ -19,7 +16,7 @@ export class Home extends React.Component {
   };
 
   /* 展开侧边栏函数 */
-  toggle = () => {
+  toggleSider = () => {
     this.setState({
       collapsed: !this.state.collapsed,
     });
@@ -43,26 +40,20 @@ export class Home extends React.Component {
                 <MenuLayout />
               </div>
             </div>
-
           </Sider>
           <Layout>
-            <Header style={{ background: '#fff', padding: 0 }}>
+            {/* 重写头部CSS样式 */}
+            <Header className="layout-header" style={{ background: "#fff", padding: 0 }}>
               <Icon
                 className="trigger"
                 type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                onClick={this.toggle}
+                onClick={this.toggleSider}
               />
             </Header>
-            <Content style={{
-              margin: '24px 16px', padding: 24, background: '#fff',
-            }}
-            >
+            <Content className="layout-main">
               {/* 路由切换组件区域 */}
-              <Route path="/userManage" exact component={UserPaging} />
-              <Route path="/tagManage" exact component={TagPaging} />
-              <Route path="/shopManage" exact component={ShopPaging} />
-              <Route path="/commentManage" exact component={CommentPaging} />
-          </Content>
+              <HomeRoute />
+            </Content>
           </Layout>
         </Layout>
       </Router>

@@ -1,4 +1,3 @@
-import {AbstractRequest} from "../abstract.request";
 import {ShopCommonService} from "./shop.common.service";
 
 /**

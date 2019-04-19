@@ -1,5 +1,4 @@
 import {OrderCommonService} from "./order.common.service";
-import {AbstractRequest} from "../abstract.request";
 
 export class OrderAdminService extends OrderCommonService {
     orderUpdate = (request) => {
