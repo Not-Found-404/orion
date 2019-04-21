@@ -118,6 +118,19 @@ export class CommentPaging extends Component {
     this.setState(o);
   };
 
+  enableStatus = (commentId, enable) => {
+    let status = enable ? 1 : -2;
+    this.commentAdminService.enable({
+      params: {
+        commentId: commentId,
+        status: status
+      },
+      success: (data) => {
+        this.setData();
+      }
+    })
+  };
+
   getFields = () => {
     const searchParamsInput = [];
     searchParamsInput.push(
