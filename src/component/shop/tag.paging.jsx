@@ -12,7 +12,7 @@ export class TagPaging extends Component {
 
   state = {
     data: [],
-    pagination: {},
+    pagination: false,
     loading: true,
     createDrawerVisible: false,
     createTagLoading: false,
@@ -222,6 +222,7 @@ export class TagPaging extends Component {
           columns={this.columns}
           dataSource={this.state.data}
           loading={this.state.loading}
+          pagination={false}
         />
       </Card>
     )

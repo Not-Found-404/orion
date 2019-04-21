@@ -164,7 +164,7 @@ export class UserPaging extends Component {
       </Col>
     );
     searchParamsInput.push(
-      <Col span={6} key={3}>
+      <Col span={6} key={4}>
         <Form.Item
           label="用户类型"
         >
