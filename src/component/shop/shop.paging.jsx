@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Table, Form, Row, Col, Input, Button} from 'antd';
+import {Table, Form, Row, Col, Input, Button,Card} from 'antd';
 import {ShopAdminService} from "../../service/shop/shop.admin.service";
 import {ColorUtil} from "../../util/color.util";
 
@@ -122,61 +122,60 @@ export class ShopPaging extends Component {
     searchParamsInput.push(
       <Col span={6} key={1}>
         <Form.Item label={`店铺id`}>
-          <Input onChange={this.inputChangeHandler} name="shopIdParam" placeholder="输入手机号"/>
+          <Input onChange={this.inputChangeHandler} name="shopIdParam" placeholder="输入手机号" />
         </Form.Item>
       </Col>
     );
     searchParamsInput.push(
       <Col span={6} key={2}>
         <Form.Item label={`店铺名`}>
-          <Input onChange={this.inputChangeHandler} name="shopNameParam" placeholder="输入店铺名"/>
+          <Input onChange={this.inputChangeHandler} name="shopNameParam" placeholder="输入店铺名" />
         </Form.Item>
       </Col>
     );
     searchParamsInput.push(
       <Col span={6} key={3}>
         <Form.Item label={`卖家id`}>
-          <Input onChange={this.inputChangeHandler} name="userIdParam" placeholder="输入用户id"/>
+          <Input onChange={this.inputChangeHandler} name="userIdParam" placeholder="输入用户id" />
         </Form.Item>
       </Col>
     );
     searchParamsInput.push(
       <Col span={6} key={4}>
         <Form.Item label={`联系电话`}>
-          <Input onChange={this.inputChangeHandler} name="mobileParam" placeholder="输入联系电话"/>
+          <Input onChange={this.inputChangeHandler} name="mobileParam" placeholder="输入联系电话" />
         </Form.Item>
       </Col>
     );
     return searchParamsInput;
   };
 
-
   render() {
     return (
-      <div>
+      <Card title="店铺管理">
         <Form
           className="ant-advanced-search-form"
           onSubmit={this.handleSearch}
         >
           <Row gutter={24}>{this.getFields()}</Row>
           <Row>
-            <Col span={24} style={{textAlign: 'right'}}>
+            <Col span={24} style={{ textAlign: 'right' }}>
               <Button type="primary" onClick={() => {
                 this.setData()
               }}>搜索</Button>
-              <Button style={{marginLeft: 8}} onClick={this.setData}>
+              <Button style={{ marginLeft: 8 }} onClick={this.setData}>
                 重置
               </Button>
             </Col>
           </Row>
-          <br/>
+          <br />
           <Table
             columns={this.columns}
             dataSource={this.state.data}
             loading={this.state.loading}
           />
         </Form>
-      </div>
+      </Card>
     )
   }
 }

@@ -1,5 +1,4 @@
 import {TagCommonService} from "./tag.common.service";
-import {AbstractRequest} from "../abstract.request";
 
 export class TagAdminService extends TagCommonService {
     /**

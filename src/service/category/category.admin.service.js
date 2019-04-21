@@ -1,5 +1,4 @@
 import {CategoryCommonService} from "./category.common.service";
-import {AbstractRequest} from "../abstract.request";
 
 export class CategoryAdminService extends CategoryCommonService {
     /**

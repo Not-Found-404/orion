@@ -1,5 +1,4 @@
 import {AbstractService} from "../abstract.service";
-import {AbstractRequest} from "../abstract.request";
 
 export class OrderCommonService extends AbstractService {
     /**
