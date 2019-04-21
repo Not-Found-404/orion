@@ -1,9 +1,10 @@
 import React from 'react';
-import { Layout, Icon } from 'antd';
-import { MenuLayout } from '../../component/menu/menu-layout';
-import { BrowserRouter as Router, Route } from "react-router-dom";
-import { HomeRoute } from "../route/home.route";
-import './home.css'; // 引入样式表
+import {Layout, Icon} from 'antd';
+import {MenuLayout} from '../../component/menu/menu-layout';
+import {BrowserRouter as Router, Route} from "react-router-dom";
+import {HomeRoute} from "../route/home.route";
+import './home.css';
+import {UserAdminService} from "../../service/user/user.admin.service"; // 引入样式表
 
 // 界面控件
 const {
@@ -14,6 +15,19 @@ export class Home extends React.Component {
   state = {
     collapsed: false,
   };
+
+  // todo 测试用，直接登录管路员账号
+  userAdminService = new UserAdminService();
+  componentDidMount() {
+    this.userAdminService.login({
+      params: {
+        mobile: "admin",
+        password: "1",
+        type: 3
+      },
+      success: (data) => {}
+    })
+  }
 
   /* 展开侧边栏函数 */
   toggleSider = () => {
@@ -36,13 +50,13 @@ export class Home extends React.Component {
               <div className="logo">O2O</div>
               <div className="layout-sider__menu">
                 {/* 菜单项 */}
-                <MenuLayout />
+                <MenuLayout/>
               </div>
             </div>
           </Sider>
           <Layout>
             {/* 重写头部CSS样式 */}
-            <Header className="layout-header" style={{ background: "#fff", padding: 0 }}>
+            <Header className="layout-header" style={{background: "#fff", padding: 0}}>
               <Icon
                 className="trigger"
                 type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
@@ -51,7 +65,7 @@ export class Home extends React.Component {
             </Header>
             <Content className="layout-main">
               {/* 路由切换组件区域 */}
-              <HomeRoute />
+              <HomeRoute/>
             </Content>
           </Layout>
         </Layout>
