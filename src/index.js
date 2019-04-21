@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Home } from "./view/home/home";
-import "antd/dist/antd.css";
+// 国际化处理
+import { LocaleProvider } from 'antd';
+import zhCN from 'antd/lib/locale-provider/zh_CN';
 import "./index.css";
 
 class App extends React.Component {
@@ -15,4 +17,11 @@ class App extends React.Component {
 }
 
 // 渲染函数
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(
+  <LocaleProvider locale={zhCN}>
+  {/* 国际化处理 */}
+    <App />
+  </LocaleProvider>
+  ,
+  document.getElementById('root')
+);

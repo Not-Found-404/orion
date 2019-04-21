@@ -52,12 +52,12 @@ export class AbstractService {
         if (response.success) {
             request.success(response.result);
         } else {
-            if (typeof request.error === "function") {
+            if (request.error && typeof request.error === "function") {
                 request.error(response);
             }
             this.notice(response.error);
         }
-        if (typeof request.final === "function") {
+        if (request.final && typeof request.final === "function") {
             request.final();
         }
     };
