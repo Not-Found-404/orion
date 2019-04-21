@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
-import {Table, Form, Row, Col, Input, Button, Modal} from 'antd';
+import {Table, Form, Row, Col, Input, Button, Modal, Card, Select} from 'antd';
 import {OrderAdminService} from "../../service/order/order.admin.service";
 import {TimeUtil} from "../../util/time.util";
 import {ColorUtil} from "../../util/color.util";
+
+const {Option} = Select;
 
 /**
  * Created by wildhunt_unique
@@ -17,9 +19,13 @@ export class OrderPaging extends Component {
   }
 
   columns = [{
-    title: '订单Id',
+    title: '订单id',
     dataIndex: 'orderId',
     key: 'orderId',
+  }, {
+    title: '店铺id',
+    dataIndex: 'shopId',
+    key: 'shopId',
   }, {
     title: '店铺名',
     dataIndex: 'shopName',
@@ -34,8 +40,12 @@ export class OrderPaging extends Component {
     key: 'buyerName',
   }, {
     title: '买家手机',
-    dataIndex: 'userName',
-    key: 'userName'
+    key: 'buyerPhone',
+    render: (text, record) => {
+      return (
+        <div></div>
+      );
+    }
   }, {
     title: '',
     dataIndex: 'payStatus',
@@ -94,9 +104,11 @@ export class OrderPaging extends Component {
     enableStatusParam: null,
     payStatusParam: null,
     buyerIdParam: null,
+    orderIdParam: null,
     // 详情页
     detailModalVisible: false,
-    detailData: null
+    detailData: null,
+    detailItem: []
   };
 
   setData = () => {
@@ -104,6 +116,7 @@ export class OrderPaging extends Component {
       loading: true
     });
     let searchParam = {
+      orderId: this.state.orderIdParam,
       shopId: this.state.shopIdParam,
       enableStatus: this.state.enableStatusParam,
       payStatus: this.state.payStatusParam,
@@ -127,9 +140,16 @@ export class OrderPaging extends Component {
   getFields = () => {
     const searchParamsInput = [];
     searchParamsInput.push(
+      <Col span={6} key={3}>
+        <Form.Item label={`订单id`}>
+          <Input onChange={this.inputChangeHandler} name="orderIdParam" placeholder="输入订单id"/>
+        </Form.Item>
+      </Col>
+    );
+    searchParamsInput.push(
       <Col span={6} key={1}>
         <Form.Item label={`店铺id`}>
-          <Input onChange={this.inputChangeHandler} name="shopIdParam" placeholder="输入手机号"/>
+          <Input onChange={this.inputChangeHandler} name="shopIdParam" placeholder="输入店铺id"/>
         </Form.Item>
       </Col>
     );
@@ -140,7 +160,26 @@ export class OrderPaging extends Component {
         </Form.Item>
       </Col>
     );
+    searchParamsInput.push(
+      <Col span={6} key={4}>
+        <Form.Item
+          label="是否付款"
+        >
+          <Select onChange={this.selectChangeHandler} name="payStatusParam" defaultValue={null}>
+            <Option value={null}>请选择</Option>
+            <Option value={1}>已付款</Option>
+            <Option value={-1}>未付款</Option>
+          </Select>
+        </Form.Item>
+      </Col>
+    );
     return searchParamsInput;
+  };
+
+  selectChangeHandler = (value) => {
+    this.setState({
+      payStatusParam: value
+    });
   };
 
   inputChangeHandler = (e) => {
@@ -151,7 +190,7 @@ export class OrderPaging extends Component {
 
   render() {
     return (
-      <div>
+      <Card title="订单管理">
         <Form
           className="ant-advanced-search-form"
         >
@@ -174,13 +213,14 @@ export class OrderPaging extends Component {
           />
         </Form>
         {this.getDetailModal()}
-      </div>
+      </Card>
     )
   }
 
   detailModalOpen = (orderId) => {
     this.setState({
-      detailData: null
+      detailData: null,
+      detailItem: []
     });
     this.orderAdminService.getDetail({
       params: {
@@ -189,7 +229,8 @@ export class OrderPaging extends Component {
       success: (data) => {
         this.setState({
           detailModalVisible: true,
-          detailData: data
+          detailData: data,
+          detailItem: data.orderLineThinResponseList
         });
       }
     });
@@ -201,36 +242,170 @@ export class OrderPaging extends Component {
     })
   };
 
+  getBuyerInfo() {
+    const view = [];
+    let detailData = this.state.detailData;
+    if (detailData != null) {
+      let orderInfo = detailData.orderThinResponse;
+      view.push(
+        <Card title={"买家信息"}>
+          <Row>
+            <Col span={6} key={"buyerId"}>
+              <Form.Item label={`买家id`}>
+                <span>{orderInfo.buyerId}</span>
+              </Form.Item>
+            </Col>
+            <Col span={6} key={"buyerName"}>
+              <Form.Item label={`买家`}>
+                <span>{orderInfo.buyerName}</span>
+              </Form.Item>
+            </Col>
+            <Col span={12} key={"buyerNotes"}>
+              <Form.Item label={`买家留言`}>
+                <span>{orderInfo.buyerNotes}</span>
+              </Form.Item>
+            </Col>
+          </Row>
+        </Card>
+      );
+    }
+    return view;
+  }
+
+  getDetailItem() {
+    const view = [];
+    let detailData = this.state.detailData;
+    if (detailData != null) {
+      let detailItemColumns = [{
+        title: '',
+        dataIndex: 'itemImage',
+        key: 'itemImage'
+      },{
+        title: '商品id',
+        dataIndex: 'itemId',
+        key: 'itemId'
+      },{
+        title: '商品名',
+        dataIndex: 'itemName',
+        key: 'itemName'
+      },{
+        title: "数量",
+        dataIndex: 'quantity',
+        key: 'quantity'
+      },{
+        title: '单价',
+        dataIndex: 'paidAmount',
+        key: 'paidAmount'
+      }];
+      view.push(
+        <Card title={"商品信息"}>
+          <Table
+            columns={detailItemColumns}
+            dataSource={this.state.detailItem}
+            pagination={false}
+          />
+        </Card>
+      );
+    }
+    return view;
+  }
+
+  getShopInfo() {
+    const view = [];
+    let detailData = this.state.detailData;
+    if (detailData != null) {
+      let orderInfo = detailData.orderThinResponse;
+      view.push(
+        <Card title="店铺信息">
+          <Row>
+            <Col span={6} key={"shopId"}>
+              <Form.Item label={`店铺id`}>
+                <span>{orderInfo.shopId}</span>
+              </Form.Item>
+            </Col>
+            <Col span={6} key={"shopName"}>
+              <Form.Item label={`店铺名`}>
+                <span>{orderInfo.shopName}</span>
+              </Form.Item>
+            </Col>
+            <Col span={12} key={"shopNotes"}>
+              <Form.Item label={`卖家留言`}>
+                <span>{orderInfo.shopNotes}</span>
+              </Form.Item>
+            </Col>
+          </Row>
+        </Card>
+      );
+    }
+    return view;
+  }
+
   getOrderInfo = () => {
     const view = [];
     let detailData = this.state.detailData;
     if (detailData != null) {
       let orderInfo = detailData.orderThinResponse;
-        view.push(
-          <div>{orderInfo.buyerNotes}</div>
-        );
+      view.push(
+        <Card title="订单信息">
+          <Row>
+            <Col span={6} key={"订单id"}>
+              <Form.Item label={`订单id`}>
+                <span>{orderInfo.orderId}</span>
+              </Form.Item>
+            </Col>
+            <Col span={6} key={"下单时间"}>
+              <Form.Item label={`下单时间`}>
+                <span>{TimeUtil.formatTime(orderInfo.createdAt, true)}</span>
+              </Form.Item>
+            </Col>
+            <Col span={6} key={"支付状态"}>
+              <Form.Item label={`支付状态`}>
+                <span>{ColorUtil.getSpan(orderInfo.payStatus, "已支付", "未支付", "")}</span>
+              </Form.Item>
+            </Col>
+            <Col span={6} key={"是否接单"}>
+              <Form.Item label={`接单状态`}>
+                <span>{ColorUtil.getSpan(orderInfo.enableStatus, "已接单", "已拒接", "")}</span>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={6} key={"itemTotalAmount"}>
+              <Form.Item label={`商品总数`}>
+                <span>{orderInfo.itemTotalAmount}</span>
+              </Form.Item>
+            </Col>
+            <Col span={6} key={"paidAmount"}>
+              <Form.Item label={`支付金额`}>
+                <span>{orderInfo.paidAmount}</span>
+              </Form.Item>
+            </Col>
+          </Row>
+        </Card>
+      );
     }
     return view;
   };
 
   getDetailModal = () => {
-
     const modal = [];
     modal.push(
       <Modal
         visible={this.state.detailModalVisible}
         title="订单详情"
         onCancel={this.detailModalClose}
-        width={720}
+        width="80%"
         footer={[
           <Button key="back" onClick={this.detailModalClose}>关闭</Button>
         ]}
       >
-        <Row>
-          <Col span={24} key={1}>
-            {this.getOrderInfo()}
-          </Col>
-        </Row>
+        {this.getOrderInfo()}
+        <br/>
+        {this.getBuyerInfo()}
+        <br/>
+        {this.getShopInfo()}
+        <br/>
+        {this.getDetailItem()}
       </Modal>
     );
     return modal;
