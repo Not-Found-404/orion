@@ -1,7 +1,7 @@
 import React from 'react';
 import {Layout, Icon} from 'antd';
 import {MenuLayout} from '../../component/menu/menu-layout';
-import {BrowserRouter as Router, Route} from "react-router-dom";
+import {BrowserRouter as Router} from "react-router-dom";
 import {HomeRoute} from "../route/home.route";
 import './home.css';
 import {UserAdminService} from "../../service/user/user.admin.service"; // 引入样式表

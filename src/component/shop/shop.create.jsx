@@ -1,8 +1,13 @@
 import React from 'react';
 import './shop.create.css';
-import { Card } from 'antd';
+import { Card, Form } from 'antd';
 
 export class ShopCreate extends React.Component {
+
+  constructor(props) {
+    super(props);
+    console.log();
+  }
 
   // 渲染函数
   render() {
@@ -13,7 +18,9 @@ export class ShopCreate extends React.Component {
           className="shop-create"
           title="创建店铺"
         >
-        创建店铺界面
+          <Form layout="inline" onSubmit={this.handleSubmit} >
+
+          </Form>
         </Card>
       </div>
     )
