@@ -1,7 +1,12 @@
-import React, { Component } from 'react';
-import { Table, Form, Row, Col, Input, Button, Rate, Card } from 'antd';
-import { CommentAdminService } from "../../service/comment/comment.admin.service";
+import React, {Component} from 'react';
+import {Table, Form, Row, Col, Input, Button, Rate, Card} from 'antd';
+import {CommentAdminService} from "../../service/comment/comment.admin.service";
+import {TimeUtil} from "../../util/time.util";
+import {ColorUtil} from "../../util/color.util";
 
+/**
+ * Created by wildhunt_unique
+ */
 export class CommentPaging extends Component {
 
   commentAdminService = new CommentAdminService();
@@ -17,21 +22,6 @@ export class CommentPaging extends Component {
     orderIdParam: null
   };
 
-  add0 = (m) => {
-    return m < 10 ? '0' + m : m
-  };
-
-  formatTime = (unixTime) => {
-    let time = new Date(unixTime);
-    let y = time.getFullYear();
-    let m = time.getMonth() + 1;
-    let d = time.getDate();
-    let h = time.getHours();
-    let mm = time.getMinutes();
-    let s = time.getSeconds();
-    return y + '-' + this.add0(m) + '-' + this.add0(d); //+ ' ' + this.add0(h) + ':' + this.add0(mm) + ':' + this.add0(s);
-  };
-
   columns = [{
     title: '订单id',
     dataIndex: 'orderId',
@@ -41,7 +31,7 @@ export class CommentPaging extends Component {
     dataIndex: 'rate',
     key: 'rate',
     render: rate => {
-      return (<Rate disabled defaultValue={rate} />)
+      return (<Rate disabled defaultValue={rate}/>)
     }
   }, {
     title: '评价内容',
@@ -52,7 +42,7 @@ export class CommentPaging extends Component {
     dataIndex: 'createdAt',
     key: 'createdAt',
     render: createdAt => {
-      return this.formatTime(createdAt);
+      return TimeUtil.formatTime(createdAt);
     }
   }, {
     title: '店铺名',
@@ -82,9 +72,13 @@ export class CommentPaging extends Component {
     key: 'status',
     render: status => {
       if (status === 1) {
-        return '显示'
+        return (
+          <span style={{"color": ColorUtil.ACTIVE}}>显示</span>
+        )
       } else if (status === -2) {
-        return '隐藏'
+        return (
+          <span style={{"color": ColorUtil.INIT}}>隐藏</span>
+        )
       }
     }
   }, {
@@ -99,19 +93,6 @@ export class CommentPaging extends Component {
       );
     }
   }];
-
-  enableStatus = (commentId, enable) => {
-    let status = enable ? 1 : -2;
-    this.commentAdminService.enable({
-      params: {
-        commentId: commentId,
-        status: status
-      },
-      success: (data) => {
-        this.setData();
-      }
-    })
-  };
 
   setData = () => {
     let searchParam = {
@@ -137,12 +118,25 @@ export class CommentPaging extends Component {
     this.setState(o);
   };
 
+  enableStatus = (commentId, enable) => {
+    let status = enable ? 1 : -2;
+    this.commentAdminService.enable({
+      params: {
+        commentId: commentId,
+        status: status
+      },
+      success: (data) => {
+        this.setData();
+      }
+    })
+  };
+
   getFields = () => {
     const searchParamsInput = [];
     searchParamsInput.push(
       <Col span={6} key={1}>
         <Form.Item label={`订单id`}>
-          <Input onChange={this.inputChangeHandler} name="orderIdParam" placeholder="输入订单编号" />
+          <Input onChange={this.inputChangeHandler} name="orderIdParam" placeholder="输入订单编号"/>
         </Form.Item>
       </Col>
     );
@@ -158,16 +152,16 @@ export class CommentPaging extends Component {
         >
           <Row gutter={24}>{this.getFields()}</Row>
           <Row>
-            <Col span={24} style={{ textAlign: 'right' }}>
+            <Col span={24} style={{textAlign: 'right'}}>
               <Button type="primary" onClick={() => {
                 this.setData()
               }}>搜索</Button>
-              <Button style={{ marginLeft: 8 }} onClick={this.setData}>
+              <Button style={{marginLeft: 8}} onClick={this.setData}>
                 重置
-                            </Button>
+              </Button>
             </Col>
           </Row>
-          <br />
+          <br/>
           <Table
             columns={this.columns}
             dataSource={this.state.data}

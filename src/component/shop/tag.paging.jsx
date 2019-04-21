@@ -1,9 +1,12 @@
-import React, { Component } from 'react';
-import { Table, Modal, Drawer, Row, Col, Button, Form, Input, Card } from 'antd';
-import { TagAdminService } from "../../service/tag/tag.admin.service";
+import React, {Component} from 'react';
+import {Table, Modal, Drawer, Row, Col, Button, Form, Input, Card} from 'antd';
+import {TagAdminService} from "../../service/tag/tag.admin.service";
 
 const confirm = Modal.confirm;
 
+/**
+ * Created by wildhunt_unique
+ */
 export class TagPaging extends Component {
   tagAdminService = new TagAdminService();
 
@@ -148,17 +151,17 @@ export class TagPaging extends Component {
             this.updateTag()
           }}>
             确认
-                    </Button>,
+          </Button>,
         ]}
       >
         <Row>
           <Col span={24} key={1}>
             <Form.Item label={`标签名`}>
-              <Input onChange={this.inputChangeHandler} name="tagUpdateNameParam" placeholder="输入标签名" />
+              <Input onChange={this.inputChangeHandler} name="tagUpdateNameParam" placeholder="输入标签名"/>
             </Form.Item>
             <Form.Item label={`标签内容`}>
               <Input onChange={this.inputChangeHandler} name="tagUpdateContentParam"
-                placeholder="输入标签内容" />
+                     placeholder="输入标签内容"/>
             </Form.Item>
           </Col>
         </Row>
@@ -179,21 +182,21 @@ export class TagPaging extends Component {
       <Row>
         <Col span={24} key={1}>
           <Form.Item label={`标签名`}>
-            <Input onChange={this.inputChangeHandler} name="tagCreateNameParam" placeholder="输入标签名" />
+            <Input onChange={this.inputChangeHandler} name="tagCreateNameParam" placeholder="输入标签名"/>
           </Form.Item>
         </Col>
       </Row>
       <Row>
         <Col span={24} key={1}>
           <Form.Item label={`标签内容`}>
-            <Input onChange={this.inputChangeHandler} name="tagCreateContentParam" placeholder="输入标签内容" />
+            <Input onChange={this.inputChangeHandler} name="tagCreateContentParam" placeholder="输入标签内容"/>
           </Form.Item>
         </Col>
       </Row>
       <Row>
-        <Col span={24} key={1} style={{ textAlign: 'right' }}>
+        <Col span={24} key={1} style={{textAlign: 'right'}}>
           <Button loading={this.state.createTagLoading} onClick={() => this.createTag()}
-            type="primary">创建标签</Button>
+                  type="primary">创建标签</Button>
         </Col>
       </Row>
     </Drawer>);
@@ -206,7 +209,7 @@ export class TagPaging extends Component {
         {this.getModal()}
         {this.getDrawer()}
         <Row>
-          <Col span={24} style={{ textAlign: 'left' }}>
+          <Col span={24} style={{textAlign: 'left'}}>
             <Button type="primary" onClick={() => {
               this.setState({
                 createDrawerVisible: true
@@ -214,7 +217,7 @@ export class TagPaging extends Component {
             }}>创建新标签</Button>
           </Col>
         </Row>
-        <br />
+        <br/>
         <Table
           columns={this.columns}
           dataSource={this.state.data}
@@ -248,7 +251,24 @@ export class TagPaging extends Component {
         this.setState({
           createTagLoading: false
         });
+
+        let createParam = {
+          name: this.state.tagCreateNameParam,
+          content: this.state.tagCreateContentParam
+        };
+        this.tagAdminService.create({
+          params: createParam,
+          success: (data) => {
+            this.createDrawerOnClose();
+            this.setData();
+          },
+          final: () => {
+            this.setState({
+              createTagLoading: false
+            });
+          }
+        });
       }
-    });
+    })
   }
 }

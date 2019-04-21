@@ -1,73 +1,82 @@
-import React, { Component } from 'react';
-import { Table, Avatar, Form, Row, Col, Input, Button, Select, Card } from 'antd';
-import { UserAdminService } from "../../service/user/user.admin.service";
+import React, {Component} from 'react';
+import {Table, Avatar, Form, Row, Col, Input, Button, Select,Card} from 'antd';
+import {UserAdminService} from "../../service/user/user.admin.service";
+import {ColorUtil} from "../../util/color.util";
 
 const { Option } = Select;
 
+/**
+ * Created by wildhunt_unique
+ */
 export class UserPaging extends Component {
 
-  userAdminService = new UserAdminService();
+    userAdminService = new UserAdminService();
 
-  columns = [{
-    title: '',
-    dataIndex: 'avatar',
-    key: 'avatar',
-    render: avatar => {
-      avatar = 'http://' + avatar;
-      return <Avatar src={avatar} />
-    }
-  }, {
-    title: '用户id',
-    dataIndex: 'userId',
-    key: 'userId',
-  }, {
-    title: '昵称',
-    dataIndex: 'nickname',
-    key: 'nickname',
-  }, {
-    title: '电话',
-    dataIndex: 'mobile',
-    key: 'mobile',
-  }, {
-    title: '类型',
-    dataIndex: 'type',
-    key: 'type',
-    render: type => {
-      if (type === 2) {
-        return '商家'
-      } else {
-        return '消费者'
-      }
-    }
-  }, {
-    title: '状态',
-    dataIndex: 'status',
-    key: 'status',
-    render: status => {
-      if (status === 1) {
-        return '启用中'
-      } else {
-        return '禁用中'
-      }
-    }
-  }, {
-    title: '操作',
-    dataIndex: 'status',
-    key: 'enable',
-    render: (text, record) => {
-      let enbale = !(record.status === 1);
-      let enbaleText = enbale ? '启用' : '禁用';
-      return (
-        <a onClick={() => this.enableStatus(record.userId, enbale)}>{enbaleText}</a>
-      );
-    }
-  }];
+    columns = [{
+        title: '',
+        dataIndex: 'avatar',
+        key: 'avatar',
+        render: avatar => {
+            avatar = 'http://' + avatar;
+            return <Avatar src={avatar}/>
+        }
+    }, {
+        title: '用户id',
+        dataIndex: 'userId',
+        key: 'userId',
+    }, {
+        title: '昵称',
+        dataIndex: 'nickname',
+        key: 'nickname',
+    }, {
+        title: '电话',
+        dataIndex: 'mobile',
+        key: 'mobile',
+    }, {
+        title: '类型',
+        dataIndex: 'type',
+        key: 'type',
+        render: type => {
+            if (type === 2) {
+                return '商家'
+            } else {
+                return '消费者'
+            }
+        }
+    }, {
+        title: '状态',
+        dataIndex: 'status',
+        key: 'status',
+        render: status => {
+            if (status === 1) {
+              return (
+                <span style={{"color":ColorUtil.ACTIVE}}>启用中</span>
+              )
+            } else {
+              return (
+                <span style={{"color":ColorUtil.INIT}}>禁用中</span>
+              )
+            }
+        }
+    }, {
+        title: '操作',
+        dataIndex: 'status',
+        key: 'enable',
+        render: (text, record) => {
+            let enbale = !(record.status === 1);
+            let enbaleText = enbale ? '启用' : '禁用';
+            return (
+                <a onClick={() => this.enableStatus(record.userId, enbale)}>{enbaleText}</a>
+            );
+        }
+    }];
 
-  state = {
-    data: [],
-    pagination: {},
-    loading: true,
-  };
+    state = {
+        data: [],
+        pagination: {},
+        loading: true,
+    };
+
 
   enableStatus = (userId, isEnable) => {
     let status = isEnable ? 1 : -2;
