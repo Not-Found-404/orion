@@ -1,9 +1,13 @@
 import React, {Component} from 'react';
 import {Table, Avatar, Form, Row, Col, Input, Button, Select} from 'antd';
 import {UserAdminService} from "../../service/user/user.admin.service";
+import {ColorUtil} from "../../util/color.util";
 
 const {Option} = Select;
 
+/**
+ * Created by wildhunt_unique
+ */
 export class UserPaging extends Component {
 
     userAdminService = new UserAdminService();
@@ -45,9 +49,13 @@ export class UserPaging extends Component {
         key: 'status',
         render: status => {
             if (status === 1) {
-                return '启用中'
+              return (
+                <span style={{"color":ColorUtil.ACTIVE}}>启用中</span>
+              )
             } else {
-                return '禁用中'
+              return (
+                <span style={{"color":ColorUtil.INIT}}>禁用中</span>
+              )
             }
         }
     }, {

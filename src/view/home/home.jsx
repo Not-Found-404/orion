@@ -6,7 +6,8 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import './home.css';
 import {CommentPaging} from "../../component/order/comment.paging";
 import {ShopPaging} from "../../component/shop/shop.paging";
-import {TagPaging} from "../../component/shop/tag.paging"; // 引入样式表
+import {TagPaging} from "../../component/shop/tag.paging";
+import {OrderPaging} from "../../component/order/order.paging"; // 引入样式表
 
 // 界面控件
 const {
@@ -36,6 +37,7 @@ export class Home extends React.Component {
                     <Route path="/commentManage" component={CommentPaging} />
                     <Route path="/shopManage" component={ShopPaging} />
                     <Route path="/tagManage" component={TagPaging} />
+                    <Route path="/orderManage" component={OrderPaging} />
                   </Content>
                 </Layout>
               </Content>

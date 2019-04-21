@@ -1,7 +1,11 @@
 import React, {Component} from 'react';
 import {Table, Form, Row, Col, Input, Button} from 'antd';
 import {ShopAdminService} from "../../service/shop/shop.admin.service";
+import {ColorUtil} from "../../util/color.util";
 
+/**
+ * Created by wildhunt_unique
+ */
 export class ShopPaging extends Component {
 
   shopAdminService = new ShopAdminService();
@@ -46,11 +50,17 @@ export class ShopPaging extends Component {
     key: 'status',
     render: status => {
       if (status === 1) {
-        return '营业中'
+        return (
+          <span style={{"color":ColorUtil.ACTIVE}}>营业中</span>
+        )
       } else if (status === -1) {
-        return '歇业中'
+        return (
+          <span style={{"color":ColorUtil.INIT}}>歇业中</span>
+        )
       } else if (status === -2) {
-        return '冻结中'
+        return (
+          <span style={{"color":ColorUtil.INIT}}>冻结中</span>
+        )
       }
     }
   }, {

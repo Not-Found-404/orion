@@ -4,6 +4,9 @@ import {TagAdminService} from "../../service/tag/tag.admin.service";
 
 const confirm = Modal.confirm;
 
+/**
+ * Created by wildhunt_unique
+ */
 export class TagPaging extends Component {
     tagAdminService = new TagAdminService();
 

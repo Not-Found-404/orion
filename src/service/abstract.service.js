@@ -2,6 +2,9 @@ import {Icon, notification} from "antd";
 import React from "react";
 import axios from 'axios';
 
+/**
+ * Created by wildhunt_unique
+ */
 export class AbstractService {
     post(param) {
         console.log('post.url:%s\nparams:%o', param.url, param.request.params);

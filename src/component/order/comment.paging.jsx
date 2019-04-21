@@ -1,7 +1,12 @@
 import React, {Component} from 'react';
 import {Table, Form, Row, Col, Input, Button, Rate} from 'antd';
 import {CommentAdminService} from "../../service/comment/comment.admin.service";
+import {TimeUtil} from "../../util/time.util";
+import {ColorUtil} from "../../util/color.util";
 
+/**
+ * Created by wildhunt_unique
+ */
 export class CommentPaging extends Component {
 
     commentAdminService = new CommentAdminService();
@@ -15,21 +20,6 @@ export class CommentPaging extends Component {
         pagination: {},
         loading: true,
         orderIdParam: null
-    };
-
-    add0 = (m) => {
-        return m < 10 ? '0' + m : m
-    };
-
-    formatTime = (unixTime) => {
-        let time = new Date(unixTime);
-        let y = time.getFullYear();
-        let m = time.getMonth() + 1;
-        let d = time.getDate();
-        let h = time.getHours();
-        let mm = time.getMinutes();
-        let s = time.getSeconds();
-        return y + '-' + this.add0(m) + '-' + this.add0(d); //+ ' ' + this.add0(h) + ':' + this.add0(mm) + ':' + this.add0(s);
     };
 
     columns = [{
@@ -52,7 +42,7 @@ export class CommentPaging extends Component {
         dataIndex: 'createdAt',
         key: 'createdAt',
         render: createdAt => {
-            return this.formatTime(createdAt);
+            return TimeUtil.formatTime(createdAt);
         }
     }, {
         title: '店铺名',
@@ -82,9 +72,13 @@ export class CommentPaging extends Component {
         key: 'status',
         render: status => {
             if (status === 1) {
-                return '显示'
+              return (
+                <span style={{"color":ColorUtil.ACTIVE}}>显示</span>
+              )
             } else if (status === -2) {
-                return '隐藏'
+              return (
+                <span style={{"color":ColorUtil.INIT}}>隐藏</span>
+              )
             }
         }
     }, {

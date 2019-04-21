@@ -31,7 +31,9 @@ export class MenuLayout extends React.Component {
           </Menu.Item>
         </SubMenu>
         <SubMenu key="sub3" title={<span><Icon type="pay-circle" />交易</span>}>
-          <Menu.Item key="9">订单管理</Menu.Item>
+          <Menu.Item key="9">
+            <Link to="/orderManage/">订单管理</Link>
+          </Menu.Item>
           <Menu.Item key="10">
             <Link to="/commentManage/">评价管理</Link>
           </Menu.Item>
