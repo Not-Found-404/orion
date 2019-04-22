@@ -2,6 +2,7 @@ import React from 'react';
 import './shop.create.css';
 import { Card, Form, Input, Button, Select, Row, Col, message } from 'antd';
 import { ShopAdminService } from '../../service/shop/shop.admin.service';
+import {TagAdminService} from "../../service/tag/tag.admin.service";
 const Option = Select.Option;
 
 /**
@@ -17,6 +18,7 @@ function hasErrors(fieldsError) {
 export class ShopCreate extends React.Component {
   // 注入服务
   shopAdminService = new ShopAdminService();
+  tagAdminService = new TagAdminService();
 
   // 构造函数
   constructor(props) {
@@ -24,10 +26,21 @@ export class ShopCreate extends React.Component {
 
     // 绑定 `this`
     this.handleSubmit = this.handleSubmit.bind(this);
-  }
+}
 
   componentDidMount() {
     // 装载数据商品标签数据
+    this.setState({
+      tagData:[]
+    });
+    this.tagAdminService.list({
+      params: null,
+      success:(data)=>{
+        this.setState({
+          tagData:data.tagThinResponse
+        })
+      }
+    })
   }
 
   /**
@@ -49,7 +62,7 @@ export class ShopCreate extends React.Component {
           imageUrl: '', // 图片地址先置为空
           mobile: values.shopPhoneNumber,
           tagIds: values.shopTag
-        }
+        };
         console.log('表单的数据: ', values, 'DTO:',createParam);
         this.shopAdminService.shopCreate(
           {
@@ -65,6 +78,21 @@ export class ShopCreate extends React.Component {
         );
       }
     });
+  }
+
+  state={
+    tagData:[]
+  };
+
+  getOption(){
+    const view = [];
+    let optionData = this.state.tagData;
+    for (let i = 0;i < optionData.length ;i++){
+      view.push(
+        <Option value={optionData[i].tagId}>{optionData[i].name}</Option>
+      )
+    }
+    return view;
   }
 
   // 渲染函数
@@ -138,8 +166,7 @@ export class ShopCreate extends React.Component {
                         placeholder="店铺标签"
                         onChange={() => { }}
                       >
-                        <Option value="零售店">零售店</Option>
-                        <Option value="超市">超市</Option>
+                       {this.getOption()}
                       </Select>
                     )}
                 </Form.Item>

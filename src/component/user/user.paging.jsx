@@ -24,10 +24,18 @@ export class UserPaging extends Component {
         title: '用户id',
         dataIndex: 'userId',
         key: 'userId',
+    },{
+      title: '昵称',
+      dataIndex: 'nickname',
+      key: 'nickname',
+    },{
+      title: '用户名',
+      dataIndex: 'username',
+      key: 'username',
     }, {
-        title: '昵称',
-        dataIndex: 'nickname',
-        key: 'nickname',
+        title: '真实姓名',
+        dataIndex: 'name',
+        key: 'name',
     }, {
         title: '电话',
         dataIndex: 'mobile',
