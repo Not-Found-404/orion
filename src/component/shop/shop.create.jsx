@@ -2,18 +2,8 @@ import React from 'react';
 import './shop.create.css';
 import { Card, Form, Input, Button, Select, Row, Col, message } from 'antd';
 import { ShopAdminService } from '../../service/shop/shop.admin.service';
-import {TagAdminService} from "../../service/tag/tag.admin.service";
+import { TagAdminService } from "../../service/tag/tag.admin.service";
 const Option = Select.Option;
-
-/**
- * 表单验证函数-判断表单项合法性
- * @param fieldsError {object[]} - 获取控件的 Error
- * @author BillowsTao
- */
-function hasErrors(fieldsError) {
-  // 判断表单项的合法性，并进行校验
-  return Object.keys(fieldsError).some(field => fieldsError[field]);
-}
 
 export class ShopCreate extends React.Component {
   // 注入服务
@@ -23,21 +13,21 @@ export class ShopCreate extends React.Component {
   // 构造函数
   constructor(props) {
     super(props);
-
+    // 初始化 tag 标记组
+    this.state = {
+      tagData: []
+    };
     // 绑定 `this`
     this.handleSubmit = this.handleSubmit.bind(this);
-}
+  }
 
   componentDidMount() {
     // 装载数据商品标签数据
-    this.setState({
-      tagData:[]
-    });
     this.tagAdminService.list({
       params: null,
-      success:(data)=>{
+      success: (data) => {
         this.setState({
-          tagData:data.tagThinResponse
+          tagData: data.tagThinResponse
         })
       }
     })
@@ -54,7 +44,7 @@ export class ShopCreate extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         // 验证通过
-        let createParam  = { // 传输 DTO
+        let createParam = { // 传输 DTO
           userId: values.sellerId,
           name: values.shopName,
           address: values.shopAddress,
@@ -63,14 +53,14 @@ export class ShopCreate extends React.Component {
           mobile: values.shopPhoneNumber,
           tagIds: values.shopTag
         };
-        console.log('表单的数据: ', values, 'DTO:',createParam);
+        console.log('表单的数据: ', values, 'DTO:', createParam);
         this.shopAdminService.shopCreate(
           {
-            params:createParam, // 传递数据
+            params: createParam, // 传递数据
             success: (data) => { // 成功回调函数
               message.success('成功添加店铺!');
             },
-            final: ()=>{
+            final: () => {
               // 重置表单状态
               this.props.form.resetFields();
             }
@@ -80,26 +70,22 @@ export class ShopCreate extends React.Component {
     });
   }
 
-  state={
-    tagData:[]
-  };
-
-  getOption(){
-    const view = [];
+  getOption() {
+    const optionList = [];
     let optionData = this.state.tagData;
-    for (let i = 0;i < optionData.length ;i++){
-      view.push(
+    for (let i = 0; i < optionData.length; i++) {
+      optionList.push(
         <Option value={optionData[i].tagId}>{optionData[i].name}</Option>
       )
     }
-    return view;
+    return optionList;
   }
 
   // 渲染函数
   render() {
     // 获取表单属性组件-解构
     const {
-      getFieldDecorator, getFieldsError, getFieldError, isFieldTouched,
+      getFieldDecorator
     } = this.props.form;
 
     return (
@@ -166,7 +152,7 @@ export class ShopCreate extends React.Component {
                         placeholder="店铺标签"
                         onChange={() => { }}
                       >
-                       {this.getOption()}
+                        {this.getOption()}
                       </Select>
                     )}
                 </Form.Item>
@@ -189,7 +175,6 @@ export class ShopCreate extends React.Component {
         </Card>
       </div>
     )
-
   }
 }
 
