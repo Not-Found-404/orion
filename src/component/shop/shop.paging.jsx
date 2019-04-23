@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Form, Row, Col, Input, Button, Card } from 'antd';
+import { Table, Form, Row, Col, Input, Button, Card, Switch } from 'antd';
 import { ShopAdminService } from "../../service/shop/shop.admin.service";
 import { ColorUtil } from "../../util/color.util";
 
@@ -64,16 +64,16 @@ export class ShopPaging extends Component {
       title: '状态',
       dataIndex: 'status',
       key: 'status',
-      render: status => {
-        if (status === 1) {
+      render: (text) => {
+        if (text === 1) {
           return (
             <span style={{ "color": ColorUtil.ACTIVE }}>营业中</span>
           )
-        } else if (status === -1) {
+        } else if (text === -1) {
           return (
             <span style={{ "color": ColorUtil.INIT }}>歇业中</span>
           )
-        } else if (status === -2) {
+        } else if (text === -2) {
           return (
             <span style={{ "color": ColorUtil.INIT }}>冻结中</span>
           )
@@ -83,26 +83,26 @@ export class ShopPaging extends Component {
     {
       title: '操作',
       dataIndex: 'status',
-      key: 'enable',
-      render: (text, record) => {
-        let enable = !(record.status === 1);
-        let enableText = enable ? '解冻' : '冻结';
+      key: 'freeze',
+      render: (text, row) => {
+        // 1-营业 -2-解冻
+        let freeze = !(row.status === 1);
         return (
-          <a onClick={() => this.enableStatus(record.shopId, enable)}>{enableText}</a>
+          <Switch onChange={this.toggleShopStatus.bind(this,row.shopId)} checkedChildren="冻结" unCheckedChildren="解冻" checked={freeze} />
         );
       }
     }
   ];
 
-  enableStatus = (shopId, enbale) => {
-    let status = enbale ? 1 : -2;
+  toggleShopStatus(shopId, checked){
+    let status = checked ? -2 : 1;
     this.shopAdminService.shopUpdate({
       params: {
         shopId: shopId,
         status: status
       },
-      success: (data) => {
-        this.setData();
+      success: () => {
+        this.initDataForm();
       }
     })
   };
@@ -116,9 +116,9 @@ export class ShopPaging extends Component {
     });
     this.shopAdminService.shopPaging({
       params: {},
-      success: (data) => {
+      success: (response) => {
         this.setState({
-          data: data.data,
+          data: response.data,
           loading: false
         })
       }
@@ -143,9 +143,9 @@ export class ShopPaging extends Component {
     });
     this.shopAdminService.shopPaging({
       params: searchParam,
-      success: (data) => {
+      success: (response) => {
         this.setState({
-          data: data.data,
+          data: response.data,
           loading: false
         })
       }
@@ -172,8 +172,7 @@ export class ShopPaging extends Component {
         <Form
           onSubmit={this.handleSearch}
         >
-          <Row gutter={24}>
-
+          <Row gutter={{ xs: 8, sm: 16, md: 24 }}>
             <Col span={6}>
               <Form.Item label={`店铺id`}>
                 {getFieldDecorator('shopIdParam')(
@@ -181,8 +180,6 @@ export class ShopPaging extends Component {
                 )}
               </Form.Item>
             </Col>
-
-
             <Col span={6}>
               <Form.Item label={`店铺名`}>
                 {getFieldDecorator('shopNameParam')(
@@ -190,8 +187,6 @@ export class ShopPaging extends Component {
                 )}
               </Form.Item>
             </Col>
-
-
             <Col span={6}>
               <Form.Item label={`卖家id`}>
                 {getFieldDecorator('userIdParam')(

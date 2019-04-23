@@ -8,6 +8,13 @@ const confirm = Modal.confirm;
  * Created by wildhunt_unique
  */
 export class TagPaging extends Component {
+  constructor(params){
+    super(params);
+
+    // 绑定`this`
+    this.createTagForm = this.createTagForm.bind(this);
+  }
+
   tagAdminService = new TagAdminService();
 
   state = {
@@ -40,10 +47,10 @@ export class TagPaging extends Component {
     title: '操作',
     key: 'enable',
     width: 100,
-    render: (text, record) => {
+    render: (text, row) => {
       return (
         <div>
-          <a onClick={() => this.showUpdateModal(record.tagId)}>编辑</a>
+          <a href="./#" onClick={(event) => this.showUpdateModal(row.tagId,row.name ,row.content, event)}>编辑</a>
         </div>
       );
     }
@@ -53,7 +60,7 @@ export class TagPaging extends Component {
     width: 100,
     render: (text, record) => {
       return (
-        <a onClick={() => this.deleteTag(record.tagId)}>删除</a>
+        <a href="./#" onClick={(event) => this.deleteTag(record.tagId, event)}>删除</a>
       );
     }
   }];
@@ -81,7 +88,8 @@ export class TagPaging extends Component {
     })
   };
 
-  deleteTag = (tagId) => {
+  deleteTag(tagId, event){
+    event.preventDefault();
     confirm({
       title: '确认删除?',
       content: '标签以及标签与店铺的关联都将被删除',
@@ -101,10 +109,18 @@ export class TagPaging extends Component {
     });
   };
 
-  showUpdateModal = (tagId) => {
+  /**
+   * 修改标签函数
+   * @author BillowsTao
+   */
+  showUpdateModal(tagId, name, content, event){
+    // 阻止默认事件传播
+    event.preventDefault();
     this.setState({
-      updateModalVisible: true,
-      updateTagId: tagId
+      updateModalVisible: true, // 显示修改 Modal
+      updateTagId: tagId, // 传递修改项的 ID
+      tagUpdateContentParam: content, // 显示当前的数据
+      tagUpdateNameParam: name,
     });
   };
 
@@ -139,8 +155,7 @@ export class TagPaging extends Component {
   };
 
   getModal = () => {
-    const modal = [];
-    modal.push(
+    return (
       <Modal
         visible={this.state.updateModalVisible}
         title="更新标签"
@@ -157,50 +172,63 @@ export class TagPaging extends Component {
         <Row>
           <Col span={24} key={1}>
             <Form.Item label={`标签名`}>
-              <Input onChange={this.inputChangeHandler} name="tagUpdateNameParam" placeholder="输入标签名" />
+              <Input
+                onChange={this.inputChangeHandler} name="tagUpdateNameParam"
+                placeholder="输入标签名" value={this.state.tagUpdateNameParam}
+              />
             </Form.Item>
             <Form.Item label={`标签内容`}>
-              <Input onChange={this.inputChangeHandler} name="tagUpdateContentParam"
-                placeholder="输入标签内容" />
+              <Input
+                onChange={this.inputChangeHandler} name="tagUpdateContentParam"
+                placeholder="输入标签内容" value={this.state.tagUpdateContentParam}
+              />
             </Form.Item>
           </Col>
         </Row>
       </Modal>
     );
-    return modal;
   };
 
   getDrawer = () => {
-    const createDrawer = [];
-    createDrawer.push(<Drawer
-      title="创建新标签"
-      width={360}
-      onClose={this.createDrawerOnClose}
-      visible={this.state.createDrawerVisible}
-      placement={"right"}
-    >
-      <Row>
-        <Col span={24} key={1}>
-          <Form.Item label={`标签名`}>
-            <Input onChange={this.inputChangeHandler} name="tagCreateNameParam" placeholder="输入标签名" />
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row>
-        <Col span={24} key={1}>
-          <Form.Item label={`标签内容`}>
-            <Input onChange={this.inputChangeHandler} name="tagCreateContentParam" placeholder="输入标签内容" />
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row>
-        <Col span={24} key={1} style={{ textAlign: 'right' }}>
-          <Button loading={this.state.createTagLoading} onClick={() => this.createTag()}
-            type="primary">创建标签</Button>
-        </Col>
-      </Row>
-    </Drawer>);
-    return createDrawer;
+    return (
+      <Drawer
+        title="创建新标签"
+        width={360}
+        onClose={this.createDrawerOnClose}
+        visible={this.state.createDrawerVisible}
+        placement={"right"}
+      >
+        <Form onSubmit={this.createTagForm}>
+          <Row gutter={{ xs: 8, sm: 16, md: 24 }}>
+            <Col span={24}>
+              <Form.Item label={`标签名`}>
+                <Input // 通过 React 接管的可控组件
+                  onChange={this.inputChangeHandler} name="tagCreateNameParam"
+                  placeholder="输入标签名" value={this.state.tagCreateNameParam}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+              <Form.Item label={`标签内容`}>
+                <Input // 通过 React 接管的可控组件
+                  onChange={this.inputChangeHandler} name="tagCreateContentParam"
+                  placeholder="输入标签内容" value={this.state.tagCreateContentParam}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24} style={{ textAlign: 'right' }}>
+              <Button loading={this.state.createTagLoading} onClick={() => this.createTag()}
+                type="primary">创建标签</Button>
+            </Col>
+          </Row>
+        </Form>
+      </Drawer>
+    );
+
   };
 
   render() {
@@ -212,7 +240,9 @@ export class TagPaging extends Component {
           <Col span={24} style={{ textAlign: 'left' }}>
             <Button type="primary" onClick={() => {
               this.setState({
-                createDrawerVisible: true
+                createDrawerVisible: true,
+                tagCreateNameParam: null, // 置添加标签模态框-标签名为空
+                tagCreateContentParam: null // 置添加标签模态框-标签值为空
               })
             }}>创建新标签</Button>
           </Col>
@@ -228,11 +258,20 @@ export class TagPaging extends Component {
     )
   }
 
-  inputChangeHandler = (e) => {
-    let o = {};
-    o[e.target.name] = e.target.value === "" ? null : e.target.value;
-    this.setState(o);
+  // 受控组件属性绑定
+  inputChangeHandler = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value === "" ? null : event.target.value,
+    });
   };
+
+  /**
+   * 创建店铺标记表单提交函数
+   * @author BillowsTao
+   */
+  createTagForm(){
+
+  }
 
   createTag = () => {
     this.setState({
