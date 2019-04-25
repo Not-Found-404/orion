@@ -111,7 +111,7 @@ export class OrderPaging extends Component {
     detailItem: []
   };
 
-  setData = () => {
+  setData = (pageNo = 1, pageSize = 5) => {
     this.setState({
       loading: true
     });
@@ -120,13 +120,17 @@ export class OrderPaging extends Component {
       shopId: this.state.shopIdParam,
       enableStatus: this.state.enableStatusParam,
       payStatus: this.state.payStatusParam,
-      buyerId: this.state.buyerIdParam
+      buyerId: this.state.buyerIdParam,
+      pageSize: pageSize,
+      pageNo: pageNo
     };
     this.orderAdminService.paging({
       params: searchParam,
       success: (result) => {
         this.setState({
-          data: result.data
+          data: result.data,
+          pageTotal: result.total,
+          pageNo:pageNo
         })
       },
       final: () => {
@@ -200,7 +204,7 @@ export class OrderPaging extends Component {
               <Button type="primary" onClick={() => {
                 this.setData()
               }}>搜索</Button>
-              <Button style={{marginLeft: 8}} onClick={this.setData}>
+              <Button style={{marginLeft: 8}} onClick={()=>this.setData()}>
                 重置
               </Button>
             </Col>
@@ -210,6 +214,15 @@ export class OrderPaging extends Component {
             columns={this.columns}
             dataSource={this.state.data}
             loading={this.state.loading}
+            pagination={{
+              total: this.state.pageTotal,
+              defaultCurrent: 1,
+              pageSize: 5,
+              current:this.state.pageNo,
+              onChange: (current, pageSize) => {
+                this.pageChange(current, pageSize)
+              }
+            }}
           />
         </Form>
         {this.getDetailModal()}
@@ -280,19 +293,19 @@ export class OrderPaging extends Component {
         title: '',
         dataIndex: 'itemImage',
         key: 'itemImage'
-      },{
+      }, {
         title: '商品id',
         dataIndex: 'itemId',
         key: 'itemId'
-      },{
+      }, {
         title: '商品名',
         dataIndex: 'itemName',
         key: 'itemName'
-      },{
+      }, {
         title: "数量",
         dataIndex: 'quantity',
         key: 'quantity'
-      },{
+      }, {
         title: '单价',
         dataIndex: 'paidAmount',
         key: 'paidAmount'
@@ -410,4 +423,13 @@ export class OrderPaging extends Component {
     );
     return modal;
   };
+
+  pageChange = (current, pageSize) => {
+    console.log("current:%d,pageSize:%d", current, pageSize);
+    this.setState({
+      pageSize: pageSize,
+      pageNo: current
+    });
+    this.setData(current, pageSize);
+  }
 }
