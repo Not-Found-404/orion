@@ -1,90 +1,91 @@
 import React, {Component} from 'react';
-import {Table, Avatar, Form, Row, Col, Input, Button, Select,Card} from 'antd';
+import {Table, Avatar, Form, Row, Col, Input, Button, Select, Card, Pagination} from 'antd';
 import {UserAdminService} from "../../service/user/user.admin.service";
 import {ColorUtil} from "../../util/color.util";
 
-const { Option } = Select;
+const {Option} = Select;
 
 /**
  * Created by wildhunt_unique
  */
 export class UserPaging extends Component {
 
-    userAdminService = new UserAdminService();
+  userAdminService = new UserAdminService();
 
-    columns = [{
-        title: '',
-        dataIndex: 'avatar',
-        key: 'avatar',
-        render: avatar => {
-            avatar = 'http://' + avatar;
-            return <Avatar src={avatar}/>
-        }
-    }, {
-        title: '用户id',
-        dataIndex: 'userId',
-        key: 'userId',
-    },{
-      title: '昵称',
-      dataIndex: 'nickname',
-      key: 'nickname',
-    },{
-      title: '用户名',
-      dataIndex: 'username',
-      key: 'username',
-    }, {
-        title: '真实姓名',
-        dataIndex: 'name',
-        key: 'name',
-    }, {
-        title: '电话',
-        dataIndex: 'mobile',
-        key: 'mobile',
-    }, {
-        title: '类型',
-        dataIndex: 'type',
-        key: 'type',
-        render: type => {
-            if (type === 2) {
-                return '商家'
-            } else {
-                return '消费者'
-            }
-        }
-    }, {
-        title: '状态',
-        dataIndex: 'status',
-        key: 'status',
-        render: status => {
-            if (status === 1) {
-              return (
-                <span style={{"color":ColorUtil.ACTIVE}}>启用中</span>
-              )
-            } else {
-              return (
-                <span style={{"color":ColorUtil.INIT}}>禁用中</span>
-              )
-            }
-        }
-    }, {
-        title: '操作',
-        dataIndex: 'status',
-        key: 'enable',
-        render: (text, record) => {
-            let enbale = !(record.status === 1);
-            let enbaleText = enbale ? '启用' : '禁用';
-            return (
-                <a onClick={() => this.enableStatus(record.userId, enbale)}>{enbaleText}</a>
-            );
-        }
-    }];
+  columns = [{
+    title: '',
+    dataIndex: 'avatar',
+    key: 'avatar',
+    render: avatar => {
+      avatar = 'http://' + avatar;
+      return <Avatar src={avatar}/>
+    }
+  }, {
+    title: '用户id',
+    dataIndex: 'userId',
+    key: 'userId',
+  }, {
+    title: '昵称',
+    dataIndex: 'nickname',
+    key: 'nickname',
+  }, {
+    title: '用户名',
+    dataIndex: 'username',
+    key: 'username',
+  }, {
+    title: '真实姓名',
+    dataIndex: 'name',
+    key: 'name',
+  }, {
+    title: '电话',
+    dataIndex: 'mobile',
+    key: 'mobile',
+  }, {
+    title: '类型',
+    dataIndex: 'type',
+    key: 'type',
+    render: type => {
+      if (type === 2) {
+        return '商家'
+      } else {
+        return '消费者'
+      }
+    }
+  }, {
+    title: '状态',
+    dataIndex: 'status',
+    key: 'status',
+    render: status => {
+      if (status === 1) {
+        return (
+          <span style={{"color": ColorUtil.ACTIVE}}>启用中</span>
+        )
+      } else {
+        return (
+          <span style={{"color": ColorUtil.INIT}}>禁用中</span>
+        )
+      }
+    }
+  }, {
+    title: '操作',
+    dataIndex: 'status',
+    key: 'enable',
+    render: (text, record) => {
+      let enable = !(record.status === 1);
+      let enableText = enable ? '启用' : '禁用';
+      return (
+        <a onClick={() => this.enableStatus(record.userId, enable)}>{enableText}</a>
+      );
+    }
+  }];
 
-    state = {
-        data: [],
-        pagination: {},
-        loading: true,
-    };
-
+  state = {
+    data: [],
+    loading: true,
+    pageTotal: 0,
+    pageSize: 5,
+    pageNo: 1
+  };
 
   enableStatus = (userId, isEnable) => {
     let status = isEnable ? 1 : -2;
@@ -99,22 +100,25 @@ export class UserPaging extends Component {
     })
   };
 
-  setData = () => {
-    let searchParams = {
-      userId: this.state.userIdParam,
-      mobile: this.state.mobileParam,
-      type: this.state.typeParam
-    };
-
+  setData = (pageNo = 1, pageSize = 5) => {
     this.setState({
       loading: true,
     });
+    let searchParams = {
+      userId: this.state.userIdParam,
+      mobile: this.state.mobileParam,
+      type: this.state.typeParam,
+      pageSize: pageSize,
+      pageNo: pageNo
+    };
     this.userAdminService.paging({
       params: searchParams,
       success: (data) => {
         this.setState({
           data: data.data,
-          loading: false
+          loading: false,
+          pageTotal: data.total,
+          pageNo:pageNo
         })
       }
     })
@@ -160,14 +164,14 @@ export class UserPaging extends Component {
     searchParamsInput.push(
       <Col span={6} key={1}>
         <Form.Item label={`手机号`}>
-          <Input onChange={this.changeHandler} name="mobile" placeholder="输入手机号" />
+          <Input onChange={this.changeHandler} name="mobile" placeholder="输入手机号"/>
         </Form.Item>
       </Col>
     );
     searchParamsInput.push(
       <Col span={6} key={2}>
         <Form.Item label={`用户id`}>
-          <Input onChange={this.changeHandler} name="userId" placeholder="输入用户id" />
+          <Input onChange={this.changeHandler} name="userId" placeholder="输入用户id"/>
         </Form.Item>
       </Col>
     );
@@ -195,6 +199,16 @@ export class UserPaging extends Component {
 
   };
 
+  getPagination = () => {
+    return (
+      <Pagination showSizeChanger onShowSizeChange={this.onShowSizeChange} defaultCurrent={3} total={500}/>
+    );
+  };
+
+  onShowSizeChange = (current, pageSize) => {
+    console.log(current, pageSize);
+  };
+
   render() {
     return (
       <Card title="用户管理">
@@ -204,23 +218,41 @@ export class UserPaging extends Component {
         >
           <Row gutter={24}>{this.getFields()}</Row>
           <Row>
-            <Col span={24} style={{ textAlign: 'right' }}>
+            <Col span={24} style={{textAlign: 'right'}}>
               <Button type="primary" onClick={() => {
                 this.handleSearch()
               }}>搜索</Button>
-              <Button style={{ marginLeft: 8 }} onClick={this.handleReset}>
+              <Button style={{marginLeft: 8}} onClick={this.handleReset}>
                 重置
-                            </Button>
+              </Button>
             </Col>
           </Row>
-          <br />
+          <br/>
           <Table
             columns={this.columns}
             dataSource={this.state.data}
             loading={this.state.loading}
+            pagination={{
+              total: this.state.pageTotal,
+              defaultCurrent: 1,
+              pageSize: 5,
+              current:this.state.pageNo,
+              onChange: (current, pageSize) => {
+                this.pageChange(current, pageSize)
+              }
+            }}
           />
         </Form>
       </Card>
     );
+  }
+
+  pageChange = (current, pageSize) => {
+    console.log("current:%d,pageSize:%d", current, pageSize);
+    this.setState({
+      pageSize: pageSize,
+      pageNo: current
+    });
+    this.setData(current, pageSize);
   }
 }

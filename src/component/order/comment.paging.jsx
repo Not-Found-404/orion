@@ -94,9 +94,11 @@ export class CommentPaging extends Component {
     }
   }];
 
-  setData = () => {
+  setData = (pageNo = 1, pageSize = 5) => {
     let searchParam = {
-      orderId: this.state.orderIdParam
+      orderId: this.state.orderIdParam,
+      pageNo:pageNo,
+      pageSize:pageSize
     };
     this.setState({
       loading: true
@@ -106,7 +108,9 @@ export class CommentPaging extends Component {
       success: (data) => {
         this.setState({
           data: data.data,
-          loading: false
+          loading: false,
+          pageTotal: data.total,
+          pageNo:pageNo
         })
       }
     });
@@ -156,7 +160,7 @@ export class CommentPaging extends Component {
               <Button type="primary" onClick={() => {
                 this.setData()
               }}>搜索</Button>
-              <Button style={{marginLeft: 8}} onClick={this.setData}>
+              <Button style={{marginLeft: 8}} onClick={()=>this.setData()}>
                 重置
               </Button>
             </Col>
@@ -166,9 +170,26 @@ export class CommentPaging extends Component {
             columns={this.columns}
             dataSource={this.state.data}
             loading={this.state.loading}
+            pagination={{
+              total: this.state.pageTotal,
+              defaultCurrent: 1,
+              pageSize: 5,
+              current:this.state.pageNo,
+              onChange: (current, pageSize) => {
+                this.pageChange(current, pageSize)
+              }
+            }}
           />
         </Form>
       </Card>
     )
+  }
+  pageChange = (current, pageSize) => {
+    console.log("current:%d,pageSize:%d", current, pageSize);
+    this.setState({
+      pageSize: pageSize,
+      pageNo: current
+    });
+    this.setData(current, pageSize);
   }
 }
