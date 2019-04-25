@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
-import {Table, Avatar, Form, Row, Col, Input, Button, Select, Card, Pagination} from 'antd';
-import {UserAdminService} from "../../service/user/user.admin.service";
-import {ColorUtil} from "../../util/color.util";
+import React, { Component } from 'react';
+import { Table, Avatar, Form, Row, Col, Input, Button, Select, Card } from 'antd';
+import { UserAdminService } from "../../service/user/user.admin.service";
+import { ColorUtil } from "../../util/color.util";
 
-const {Option} = Select;
+const { Option } = Select;
 
 /**
  * Created by wildhunt_unique
@@ -12,13 +12,26 @@ export class UserPaging extends Component {
 
   userAdminService = new UserAdminService();
 
+  constructor(props) {
+    super(props);
+
+    // 构造初始化参数
+    this.state = {
+      data: [],
+      loading: true,
+    };
+
+    // 绑定 `this`
+    this.initData = this.initData.bind(this);
+  }
+
   columns = [{
     title: '',
     dataIndex: 'avatar',
     key: 'avatar',
     render: avatar => {
       avatar = 'http://' + avatar;
-      return <Avatar src={avatar}/>
+      return <Avatar src={avatar} />
     }
   }, {
     title: '用户id',
@@ -58,11 +71,11 @@ export class UserPaging extends Component {
     render: status => {
       if (status === 1) {
         return (
-          <span style={{"color": ColorUtil.ACTIVE}}>启用中</span>
+          <span style={{ "color": ColorUtil.ACTIVE }}>启用中</span>
         )
       } else {
         return (
-          <span style={{"color": ColorUtil.INIT}}>禁用中</span>
+          <span style={{ "color": ColorUtil.INIT }}>禁用中</span>
         )
       }
     }
@@ -71,188 +84,169 @@ export class UserPaging extends Component {
     dataIndex: 'status',
     key: 'enable',
     render: (text, record) => {
-      let enable = !(record.status === 1);
-      let enableText = enable ? '启用' : '禁用';
+      let enbale = !(record.status === 1);
+      let enbaleText = enbale ? '启用' : '禁用';
       return (
-        <a onClick={() => this.enableStatus(record.userId, enable)}>{enableText}</a>
+        <a href="./#" onClick={this.enableStatus.bind(this, record.userId, enbale)}>{enbaleText}</a>
       );
     }
   }];
 
-  state = {
-    data: [],
-    loading: true,
-    pageTotal: 0,
-    pageSize: 5,
-    pageNo: 1
-  };
-
-  enableStatus = (userId, isEnable) => {
+  enableStatus = (userId, isEnable, event) => {
+    event.preventDefault();
     let status = isEnable ? 1 : -2;
     this.userAdminService.updateStatus({
       params: {
         userId: userId,
         status: status
       },
-      success: data => {
-        this.setData(null);
+      success: () => {
+        // 重新请求数据
+        this.initData();
       }
     })
   };
 
-  setData = (pageNo = 1, pageSize = 5) => {
+  initData() {
+    let formFieldsValue = this.props.form.getFieldsValue();
+    let searchParams = {
+      userId: formFieldsValue.userId ? formFieldsValue.userId : null,
+      mobile: formFieldsValue.mobile ? formFieldsValue.mobile : null,
+      type: formFieldsValue.type ? formFieldsValue.type : null,
+    };
+    // 显示加载动画
     this.setState({
       loading: true,
     });
-    let searchParams = {
-      userId: this.state.userIdParam,
-      mobile: this.state.mobileParam,
-      type: this.state.typeParam,
-      pageSize: pageSize,
-      pageNo: pageNo
-    };
+    // 请求数据
     this.userAdminService.paging({
       params: searchParams,
-      success: (data) => {
+      success: (res) => {
         this.setState({
-          data: data.data,
-          loading: false,
-          pageTotal: data.total,
-          pageNo:pageNo
+          data: res.data,
+          loading: false
         })
       }
     })
-
   };
 
-
+  // 组件装载生命周期
   componentDidMount() {
-    this.setData();
+    // 初始化数据
+    this.initData();
   }
 
-  changeHandler = (e) => {
-    let value = null;
-    let element = e.currentTarget;
-    console.log(e);
-    let name = element.getAttribute("name");
-    switch (name) {
-      case "userId":
-        value = e.target.value === "" ? null : e.target.value;
-        this.setState({
-          userIdParam: value
-        });
-        break;
-      case "mobile":
-        value = e.target.value === "" ? null : e.target.value;
-        this.setState({
-          mobileParam: value
-        });
-        break;
-      default:
-        break;
-    }
+  searchFormComponent() {
+    // 获取表单属性组件-解构
+    const {
+      getFieldDecorator
+    } = this.props.form;
+    return (
+      <Row gutter={{ xs: 8, sm: 16, md: 24 }}>
+        <Col lg={8} md={12}>
+          <Form.Item label={`手机号`}>
+            {getFieldDecorator('mobile',{
+              initialValue: null,
+            })(
+              <Input name="mobile" placeholder="输入手机号" />
+            )}
+          </Form.Item>
+        </Col>
+        <Col lg={8} md={12}>
+          <Form.Item label={`用户id`}>
+            {getFieldDecorator('userId',{
+              initialValue: null,
+            })(
+              <Input name="userId" placeholder="输入用户id" />
+            )}
+          </Form.Item>
+        </Col>
+        <Col lg={8} md={12}>
+          <Form.Item
+            label="用户类型"
+          >
+            {getFieldDecorator('type',{
+                valuePropName: 'checked',
+                initialValue: null
+              }
+            )(
+              <Select name="type" allowClear placeholder="选择用户类型">
+                <Option key="1" value={2}>商家</Option>
+                <Option key="2" value={1}>消费者</Option>
+              </Select>
+            )}
+          </Form.Item>
+        </Col>
+      </Row>
+    );
   };
 
-  selectChangeHandler = (value) => {
+  handleSearch(event) {
+    // 阻止表单默认提交行为
+    event.preventDefault();
+    let formFieldsValue = this.props.form.getFieldsValue();
+    let searchParams = {
+      userId: formFieldsValue.userId ? formFieldsValue.userId : null,
+      mobile: formFieldsValue.mobile ? formFieldsValue.mobile : null,
+      type: formFieldsValue.type ? formFieldsValue.type : null,
+    };
+    // 显示加载动画
     this.setState({
-      typeParam: value
+      loading: true,
+    });
+    // 请求数据
+    this.userAdminService.paging({
+      params: searchParams,
+      success: (res) => {
+        this.setState({
+          data: res.data,
+          loading: false
+        })
+      }
     });
   };
 
-  getFields = () => {
-    const searchParamsInput = [];
-    searchParamsInput.push(
-      <Col span={6} key={1}>
-        <Form.Item label={`手机号`}>
-          <Input onChange={this.changeHandler} name="mobile" placeholder="输入手机号"/>
-        </Form.Item>
-      </Col>
-    );
-    searchParamsInput.push(
-      <Col span={6} key={2}>
-        <Form.Item label={`用户id`}>
-          <Input onChange={this.changeHandler} name="userId" placeholder="输入用户id"/>
-        </Form.Item>
-      </Col>
-    );
-    searchParamsInput.push(
-      <Col span={6} key={4}>
-        <Form.Item
-          label="用户类型"
-        >
-          <Select onChange={this.selectChangeHandler} name="type" defaultValue={null}>
-            <Option value={null}>请选择</Option>
-            <Option value={2}>商家</Option>
-            <Option value={1}>消费者</Option>
-          </Select>
-        </Form.Item>
-      </Col>
-    );
-    return searchParamsInput;
-  };
-
-  handleSearch = (e) => {
-    this.setData();
-  };
-
-  handleReset = (e) => {
-
-  };
-
-  getPagination = () => {
-    return (
-      <Pagination showSizeChanger onShowSizeChange={this.onShowSizeChange} defaultCurrent={3} total={500}/>
-    );
-  };
-
-  onShowSizeChange = (current, pageSize) => {
-    console.log(current, pageSize);
+  // 重置查询表单函数
+  handleReset() {
+    // 重置查询条件
+    this.props.form.resetFields();
+    // 重新搜索数据
+    this.initData();
   };
 
   render() {
     return (
       <Card title="用户管理">
         <Form
-          className="ant-advanced-search-form"
-          onSubmit={this.handleSearch}
+          onSubmit={this.handleSearch.bind(this)}
         >
-          <Row gutter={24}>{this.getFields()}</Row>
+          {/* 搜索编辑内容区域 */}
+          {this.searchFormComponent()}
           <Row>
-            <Col span={24} style={{textAlign: 'right'}}>
-              <Button type="primary" onClick={() => {
-                this.handleSearch()
-              }}>搜索</Button>
-              <Button style={{marginLeft: 8}} onClick={this.handleReset}>
+            <Col span={24} style={{ textAlign: 'right' }}>
+              <Button type="primary" htmlType="submit">
+                搜索
+              </Button>
+              <Button style={{ marginLeft: 8 }} onClick={this.handleReset.bind(this)}>
                 重置
               </Button>
             </Col>
           </Row>
-          <br/>
+          <br />
           <Table
             columns={this.columns}
+            rowKey="userId"
             dataSource={this.state.data}
             loading={this.state.loading}
-            pagination={{
-              total: this.state.pageTotal,
-              defaultCurrent: 1,
-              pageSize: 5,
-              current:this.state.pageNo,
-              onChange: (current, pageSize) => {
-                this.pageChange(current, pageSize)
-              }
-            }}
           />
         </Form>
       </Card>
     );
   }
-
-  pageChange = (current, pageSize) => {
-    console.log("current:%d,pageSize:%d", current, pageSize);
-    this.setState({
-      pageSize: pageSize,
-      pageNo: current
-    });
-    this.setData(current, pageSize);
-  }
 }
+
+/**
+ * 创建包装的类
+ * @author BillowsTao
+ */
+UserPaging = Form.create({ name: 'user_manage' })(UserPaging);

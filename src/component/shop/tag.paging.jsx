@@ -154,7 +154,7 @@ export class TagPaging extends Component {
     })
   };
 
-  getModal = () => {
+  getModal(){
     return (
       <Modal
         visible={this.state.updateModalVisible}
@@ -189,7 +189,7 @@ export class TagPaging extends Component {
     );
   };
 
-  getDrawer = () => {
+  getDrawer() {
     return (
       <Drawer
         title="创建新标签"
@@ -253,6 +253,7 @@ export class TagPaging extends Component {
           dataSource={this.state.data}
           loading={this.state.loading}
           pagination={false}
+          rowKey="tagId"
         />
       </Card>
     )

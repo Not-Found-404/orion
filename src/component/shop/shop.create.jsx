@@ -75,7 +75,7 @@ export class ShopCreate extends React.Component {
     let optionData = this.state.tagData;
     for (let i = 0; i < optionData.length; i++) {
       optionList.push(
-        <Option value={optionData[i].tagId}>{optionData[i].name}</Option>
+        <Option key={optionData[i].tagId} value={optionData[i].tagId}>{optionData[i].name}</Option>
       )
     }
     return optionList;
