@@ -16,7 +16,6 @@ export class ShopPaging extends Component {
     // 构造初始化参数
     this.state = {
       data: [],
-      pagination: {},
       loading: true,
       shopIdParam: null,
       shopNameParam: null,
@@ -182,7 +181,6 @@ export class ShopPaging extends Component {
    * @author BillowsTao
    */
   onPageChange(page, pageSize) {
-    console.log(`当前页:${page} 页大小:${pageSize}`);
     this.setState({
       loading: true,
       currentPageNo: page,  // 设置当前页

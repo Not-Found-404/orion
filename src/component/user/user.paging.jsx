@@ -19,10 +19,12 @@ export class UserPaging extends Component {
     this.state = {
       data: [],
       loading: true,
+      pageSize: 5,          // 初始化每页条数
     };
 
     // 绑定 `this`
     this.initData = this.initData.bind(this);
+    this.onPageChange = this.onPageChange.bind(this);
   }
 
   columns = [{
@@ -108,23 +110,23 @@ export class UserPaging extends Component {
   };
 
   initData() {
-    let formFieldsValue = this.props.form.getFieldsValue();
-    let searchParams = {
-      userId: formFieldsValue.userId ? formFieldsValue.userId : null,
-      mobile: formFieldsValue.mobile ? formFieldsValue.mobile : null,
-      type: formFieldsValue.type ? formFieldsValue.type : null,
-    };
     // 显示加载动画
     this.setState({
       loading: true,
     });
     // 请求数据
     this.userAdminService.paging({
-      params: searchParams,
-      success: (res) => {
+      params: {
+        pageNo: 1, // 初始化页数为1
+        pageSize: this.state.pageSize, // 获取页数条目数
+      },
+      success: (response) => {
         this.setState({
-          data: res.data,
-          loading: false
+          data: response.data,
+          loading: false,
+          totalSize: response.total, // 全部条目数
+          currentPageNo: 1,
+          searchParam: {} // 置搜索参数为空
         })
       }
     })
@@ -185,7 +187,12 @@ export class UserPaging extends Component {
     // 阻止表单默认提交行为
     event.preventDefault();
     let formFieldsValue = this.props.form.getFieldsValue();
-    let searchParams = {
+    // 处理请求参数
+    let requestParam = {
+      pageNo: 1, // 初始化页数为1
+      pageSize: this.state.pageSize, // 获取页数条目数
+    }
+    let searchParam = {
       userId: formFieldsValue.userId ? formFieldsValue.userId : null,
       mobile: formFieldsValue.mobile ? formFieldsValue.mobile : null,
       type: formFieldsValue.type ? formFieldsValue.type : null,
@@ -193,14 +200,17 @@ export class UserPaging extends Component {
     // 显示加载动画
     this.setState({
       loading: true,
+      searchParam: searchParam, // 置入搜索参数
     });
     // 请求数据
     this.userAdminService.paging({
-      params: searchParams,
-      success: (res) => {
+      params: {...searchParam,...requestParam},
+      success: (response) => {
         this.setState({
-          data: res.data,
-          loading: false
+          data: response.data,
+          loading: false,
+          totalSize: response.total, // 全部页数
+          pageNo: 1
         })
       }
     });
@@ -213,6 +223,32 @@ export class UserPaging extends Component {
     // 重新搜索数据
     this.initData();
   };
+
+  /**
+   * 页数变化回调函数
+   * @author BillowsTao
+   */
+  onPageChange(page, pageSize) {
+    this.setState({
+      loading: true,
+      currentPageNo: page,  // 设置当前页
+    });
+    // 处理请求参数
+    let requestParam = {
+      pageNo: page, // setState 方法会异步执行，获取的参数不正确
+      pageSize: this.state.pageSize,
+    }
+    this.userAdminService.paging({
+      params: {...this.state.searchParam, ...requestParam},
+      success: (response) => {
+        this.setState({
+          data: response.data,
+          loading: false,
+          totalSize: response.total, // 全部页数
+        })
+      }
+    })
+  }
 
   render() {
     return (
@@ -238,6 +274,15 @@ export class UserPaging extends Component {
             rowKey="userId"
             dataSource={this.state.data}
             loading={this.state.loading}
+            pagination={
+              {
+                defaultCurrent: 1,                  // 默认页数
+                current: this.state.currentPageNo,  // 当前页数
+                total: this.state.totalSize,        // 总页数
+                pageSize: this.state.pageSize,      // 每页条数
+                onChange: this.onPageChange         // 翻页回调函数
+              }
+            }
           />
         </Form>
       </Card>

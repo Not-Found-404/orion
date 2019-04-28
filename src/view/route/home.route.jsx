@@ -12,7 +12,7 @@ export class HomeRoute extends React.Component {
     return (
       // 路由组件在此声明
       <div className="routeLayout">
-        <Route path="/userManage" component={UserPaging}/>
+        <Route exact path="/" component={UserPaging}/>{/* 默认跳转用户中心 */}
         <Route path="/tagManage" component={TagPaging}/>
         <Route path="/shopManage" component={ShopPaging}/>
         <Route path="/commentManage" component={CommentPaging}/>
