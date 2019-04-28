@@ -21,12 +21,14 @@ export class ShopPaging extends Component {
       shopIdParam: null,
       shopNameParam: null,
       userIdParam: null,
-      mobileParam: null
+      mobileParam: null,
+      pageSize: 5,          // 初始化每页条数
     };
 
     // 绑定 `this`
     this.initDataForm = this.initDataForm.bind(this);
     this.resetSearchForm = this.resetSearchForm.bind(this);
+    this.onPageChange = this.onPageChange.bind(this);
   }
 
   componentDidMount() {
@@ -115,12 +117,18 @@ export class ShopPaging extends Component {
       loading: true,
     });
     this.shopAdminService.shopPaging({
-      params: {},
+      params: {
+        pageNo: 1, // 初始化页数为1
+        pageSize: this.state.pageSize, // 获取页数条目数
+      },
       success: (response) => {
         this.setState({
           data: response.data,
-          loading: false
-        })
+          loading: false,
+          totalSize: response.total, // 全部条目数
+          currentPageNo: 1,
+          searchParam: {} // 置搜索参数为空
+        });
       }
     })
   }
@@ -131,6 +139,10 @@ export class ShopPaging extends Component {
     event.preventDefault();
     let formFieldsValue = this.props.form.getFieldsValue();
     // 处理请求参数
+    let requestParam = {
+        pageNo: 1, // 初始化页数为1
+        pageSize: this.state.pageSize, // 获取页数条目数
+    }
     let searchParam = {
       shopId: formFieldsValue.shopIdParam ? formFieldsValue.shopIdParam : null,
       name: formFieldsValue.shopNameParam ? formFieldsValue.shopNameParam : null,
@@ -140,13 +152,16 @@ export class ShopPaging extends Component {
     // 加载动画展示
     this.setState({
       loading: true,
+      searchParam: searchParam, // 置入搜索参数
     });
     this.shopAdminService.shopPaging({
-      params: searchParam,
+      params: {...searchParam,...requestParam},
       success: (response) => {
         this.setState({
           data: response.data,
-          loading: false
+          loading: false,
+          totalSize: response.total, // 全部页数
+          pageNo: 1
         })
       }
     })
@@ -160,6 +175,33 @@ export class ShopPaging extends Component {
     this.initDataForm();
     // 重置查询条件
     this.props.form.resetFields();
+  }
+
+  /**
+   * 页数变化回调函数
+   * @author BillowsTao
+   */
+  onPageChange(page, pageSize) {
+    console.log(`当前页:${page} 页大小:${pageSize}`);
+    this.setState({
+      loading: true,
+      currentPageNo: page,  // 设置当前页
+    });
+    // 处理请求参数
+    let requestParam = {
+      pageNo: page, // setState 方法会异步执行，获取的参数不正确
+      pageSize: this.state.pageSize,
+    }
+    this.shopAdminService.shopPaging({
+      params: {...this.state.searchParam, ...requestParam},
+      success: (response) => {
+        this.setState({
+          data: response.data,
+          loading: false,
+          totalSize: response.total, // 全部页数
+        })
+      }
+    })
   }
 
   render() {
@@ -219,6 +261,15 @@ export class ShopPaging extends Component {
             rowKey="shopId"
             dataSource={this.state.data}
             loading={this.state.loading}
+            pagination={
+              {
+                defaultCurrent: 1,                  // 默认页数
+                current: this.state.currentPageNo,  // 当前页数
+                total: this.state.totalSize,        // 总页数
+                pageSize: this.state.pageSize,      // 每页条数
+                onChange: this.onPageChange         // 翻页回调函数
+              }
+            }
           />
         </Form>
       </Card>
