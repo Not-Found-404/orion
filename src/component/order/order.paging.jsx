@@ -40,12 +40,8 @@ export class OrderPaging extends Component {
     key: 'buyerName',
   }, {
     title: '买家手机',
-    key: 'buyerPhone',
-    render: (text, record) => {
-      return (
-        <div></div>
-      );
-    }
+    dataIndex: 'buyerMobile',
+    key: 'buyerMobile'
   }, {
     title: '',
     dataIndex: 'payStatus',
@@ -73,6 +69,10 @@ export class OrderPaging extends Component {
       } else if (enableStatus === -1) {
         return (
           <span style={{"color": ColorUtil.IN_ACTIVE}}>已拒绝</span>
+        )
+      }else if (enableStatus === 0) {
+        return (
+          <span style={{"color": ColorUtil.INIT}}>未接单</span>
         )
       }
     }
