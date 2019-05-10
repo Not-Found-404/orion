@@ -39,6 +39,6 @@
   "bugs": {
     "url": "https://github.com/Not-Found-404/orion/issues"
   },
-  "homepage": "https://github.com/Not-Found-404/orion#readme",
+  "homepage": ".",
   "devDependencies": {}
 }

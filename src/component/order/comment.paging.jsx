@@ -130,7 +130,7 @@ export class CommentPaging extends Component {
         status: status
       },
       success: (data) => {
-        this.setData();
+        this.setData(this.state.pageNo,this.state.pageSize);
       }
     })
   };
