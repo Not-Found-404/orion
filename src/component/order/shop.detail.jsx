@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import moment from 'moment';
-import {Form, Row, Col, Button, Card, Tabs, Avatar, Comment, Tooltip} from 'antd/lib/index';
+import {Form, Row, Col, Button, Card, Tabs, Avatar, List,Skeleton} from 'antd';
 import {Link} from "react-router-dom";
 import {ShopAdminService} from "../../service/shop/shop.admin.service";
 import {CommentAdminService} from "../../service/comment/comment.admin.service";
+import {TimeUtil} from "../../util/time.util";
 
 const TabPane = Tabs.TabPane;
 const {Meta} = Card;
@@ -25,7 +26,8 @@ export class ShopDetail extends Component {
     shopId: null,
     shopData: null,
     categoryList: null,
-    commentList: null
+    commentList: null,
+    commentLoading: true
   };
 
   setData = () => {
@@ -142,22 +144,21 @@ export class ShopDetail extends Component {
       commentList.push(commentListTemp[index]);
     }
     return (
-      <Comment
-        author={<a>Han Solo</a>}
-        avatar={(
-          <Avatar
-            src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-            alt="Han Solo"
-          />
-        )}
-        content={(
-          <p>We supply a series of design principles, practical patterns and high quality design resources (Sketch and
-            Axure), to help people create their product prototypes beautifully and efficiently.</p>
-        )}
-        datetime={(
-          <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
-            <span>{moment().fromNow()}</span>
-          </Tooltip>
+      <List
+        className="comment-list"
+        itemLayout="horizontal"
+        dataSource={commentList}
+        renderItem={item => (
+          <List.Item >
+            <Skeleton avatar title={false} loading={false} active>
+              <List.Item.Meta
+                avatar={<Avatar src={"http://"+ item.userAvatar} />}
+                title={<a href="https://ant.design">{item.userName}</a>}
+                description={item.context}
+              />
+              <div>{TimeUtil.formatTime(item.createdAt,true)}</div>
+            </Skeleton>
+          </List.Item>
         )}
       />
     )
@@ -201,8 +202,16 @@ export class ShopDetail extends Component {
         <br/>
         <Tabs defaultActiveKey="1">
           <TabPane tab="所有商品" key="1">{this.getCategoryList()}</TabPane>
-          <TabPane tab="评价" key="2">{this.getCommentList()}</TabPane>
-          <TabPane tab="订单记录" key="3">评价</TabPane>
+          <TabPane tab="评价" key="2">
+            <Row>
+              <Col span={2}/>
+              <Col  span={20}>
+                {this.getCommentList()}
+              </Col>
+              <Col span={2}/>
+            </Row>
+          </TabPane>
+          {/*<TabPane tab="订单记录" key="3">评价</TabPane>*/}
         </Tabs>
       </Card>
     )
