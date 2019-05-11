@@ -292,7 +292,14 @@ export class OrderPaging extends Component {
       let detailItemColumns = [{
         title: '',
         dataIndex: 'itemImage',
-        key: 'itemImage'
+        key: 'itemImage',
+        render:(itemImage)=>{
+          if (itemImage!=null){
+            return (
+              <img style={{width:"100px",height:"100px"}} src={itemImage} alt=""/>
+            )
+          }
+        }
       }, {
         title: '商品id',
         dataIndex: 'itemId',

@@ -29,6 +29,9 @@ export class MenuLayout extends React.Component {
           <Menu.Item key="4">
             <Link to="/shopManage/">店铺管理</Link>
           </Menu.Item>
+          <Menu.Item key="complaintManage">
+            <Link to="/complaintManage/">投诉管理</Link>
+          </Menu.Item>
         </SubMenu>
         <SubMenu key="sub3" title={<span><Icon type="pay-circle" /><span>交易</span></span>}>
           <Menu.Item key="5">

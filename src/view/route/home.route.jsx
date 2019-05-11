@@ -6,6 +6,7 @@ import {TagPaging} from "../../component/shop/tag.paging";
 import {ShopCreate} from "../../component/shop/shop.create";
 import {UserPaging} from '../../component/user/user.paging';
 import {OrderPaging} from "../../component/order/order.paging";
+import {ComplaintManage} from "../../component/order/complaint.manage";
 
 export class HomeRoute extends React.Component {
   render() {
@@ -18,6 +19,7 @@ export class HomeRoute extends React.Component {
         <Route path="/commentManage" component={CommentPaging}/>
         <Route path="/shopCreate" component={ShopCreate}/>
         <Route path="/orderManage" component={OrderPaging}/>
+        <Route path="/complaintManage" component={ComplaintManage}/>
       </div>
     )
   }
