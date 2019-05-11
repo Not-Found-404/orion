@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
-import { Table, Form, Row, Col, Input, Button, Card, Switch } from 'antd';
-import { ShopAdminService } from "../../service/shop/shop.admin.service";
-import { ColorUtil } from "../../util/color.util";
+import React, {Component} from 'react';
+import {Table, Form, Row, Col, Input, Button, Card, Switch, Menu} from 'antd';
+import {ShopAdminService} from "../../service/shop/shop.admin.service";
+import {ColorUtil} from "../../util/color.util";
+import {Link} from "react-router-dom";
 
 /**
  * Created by wildhunt_unique
@@ -37,7 +38,7 @@ export class ShopPaging extends Component {
 
   columns = [
     {
-      title: '店铺Id',
+      title: '店铺编码',
       dataIndex: 'shopId',
       key: 'shopId',
     },
@@ -52,7 +53,7 @@ export class ShopPaging extends Component {
       key: 'mobile',
     },
     {
-      title: '卖家id',
+      title: '卖家编码',
       dataIndex: 'userId',
       key: 'userId',
     },
@@ -68,15 +69,15 @@ export class ShopPaging extends Component {
       render: (text) => {
         if (text === 1) {
           return (
-            <span style={{ "color": ColorUtil.ACTIVE }}>营业中</span>
+            <span style={{"color": ColorUtil.ACTIVE}}>营业中</span>
           )
         } else if (text === -1) {
           return (
-            <span style={{ "color": ColorUtil.INIT }}>歇业中</span>
+            <span style={{"color": ColorUtil.INIT}}>歇业中</span>
           )
         } else if (text === -2) {
           return (
-            <span style={{ "color": ColorUtil.INIT }}>冻结中</span>
+            <span style={{"color": ColorUtil.INIT}}>冻结中</span>
           )
         }
       }
@@ -89,13 +90,22 @@ export class ShopPaging extends Component {
         // 1-营业 -2-解冻
         let freeze = !(row.status === 1);
         return (
-          <Switch onChange={this.toggleShopStatus.bind(this,row.shopId)} checkedChildren="冻结" unCheckedChildren="解冻" checked={freeze} />
+          <Switch onChange={this.toggleShopStatus.bind(this, row.shopId)} checkedChildren="冻结" unCheckedChildren="解冻"
+                  checked={freeze}/>
+        );
+      }
+    }, {
+      title: '',
+      key: 'detail',
+      render: (text, row) => {
+        return (
+          <Link to={"/shopDetail/"+row.shopId}>店铺详情</Link>
         );
       }
     }
   ];
 
-  toggleShopStatus(shopId, checked){
+  toggleShopStatus(shopId, checked) {
     let status = checked ? -2 : 1;
     this.shopAdminService.shopUpdate({
       params: {
@@ -139,8 +149,8 @@ export class ShopPaging extends Component {
     let formFieldsValue = this.props.form.getFieldsValue();
     // 处理请求参数
     let requestParam = {
-        pageNo: 1, // 初始化页数为1
-        pageSize: this.state.pageSize, // 获取页数条目数
+      pageNo: 1, // 初始化页数为1
+      pageSize: this.state.pageSize, // 获取页数条目数
     }
     let searchParam = {
       shopId: formFieldsValue.shopIdParam ? formFieldsValue.shopIdParam : null,
@@ -154,7 +164,7 @@ export class ShopPaging extends Component {
       searchParam: searchParam, // 置入搜索参数
     });
     this.shopAdminService.shopPaging({
-      params: {...searchParam,...requestParam},
+      params: {...searchParam, ...requestParam},
       success: (response) => {
         this.setState({
           data: response.data,
@@ -212,48 +222,46 @@ export class ShopPaging extends Component {
         <Form
           onSubmit={this.handleSearch}
         >
-          <Row gutter={{ xs: 8, sm: 16, md: 24 }}>
+          <Row gutter={{xs: 8, sm: 16, md: 24}}>
             <Col span={6}>
-              <Form.Item label={`店铺id`}>
+              <Form.Item label={`店铺编码`}>
                 {getFieldDecorator('shopIdParam')(
-                  <Input name="shopIdParam" placeholder="输入手机号" />
+                  <Input name="shopIdParam" placeholder="输入手机号"/>
                 )}
               </Form.Item>
             </Col>
             <Col span={6}>
               <Form.Item label={`店铺名`}>
                 {getFieldDecorator('shopNameParam')(
-                  <Input name="shopNameParam" placeholder="输入店铺名" />
+                  <Input name="shopNameParam" placeholder="输入店铺名"/>
                 )}
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label={`卖家id`}>
+              <Form.Item label={`卖家编码`}>
                 {getFieldDecorator('userIdParam')(
-                  <Input name="userIdParam" placeholder="输入用户id" />
+                  <Input name="userIdParam" placeholder="输入用户编码"/>
                 )}
               </Form.Item>
             </Col>
-
-
             <Col span={6}>
               <Form.Item label={`联系电话`}>
                 {getFieldDecorator('mobileParam')(
-                  <Input name="mobileParam" placeholder="输入联系电话" />
+                  <Input name="mobileParam" placeholder="输入联系电话"/>
                 )}
               </Form.Item>
             </Col>
 
           </Row>
           <Row>
-            <Col span={24} style={{ textAlign: 'right' }}>
+            <Col span={24} style={{textAlign: 'right'}}>
               <Button type="primary" htmlType="submit">搜索</Button>
-              <Button style={{ marginLeft: 8 }} onClick={this.resetSearchForm}>
+              <Button style={{marginLeft: 8}} onClick={this.resetSearchForm}>
                 重置
               </Button>
             </Col>
           </Row>
-          <br />
+          <br/>
           <Table
             columns={this.columns}
             rowKey="shopId"
@@ -279,4 +287,4 @@ export class ShopPaging extends Component {
  * 创建包装的类
  * @author BillowsTao
  */
-ShopPaging = Form.create({ name: 'shop_manage' })(ShopPaging);
+ShopPaging = Form.create({name: 'shop_manage'})(ShopPaging);

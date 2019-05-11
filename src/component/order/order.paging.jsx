@@ -70,7 +70,7 @@ export class OrderPaging extends Component {
         return (
           <span style={{"color": ColorUtil.IN_ACTIVE}}>已拒绝</span>
         )
-      }else if (enableStatus === 0) {
+      } else if (enableStatus === 0) {
         return (
           <span style={{"color": ColorUtil.INIT}}>未接单</span>
         )
@@ -130,7 +130,7 @@ export class OrderPaging extends Component {
         this.setState({
           data: result.data,
           pageTotal: result.total,
-          pageNo:pageNo
+          pageNo: pageNo
         })
       },
       final: () => {
@@ -204,7 +204,7 @@ export class OrderPaging extends Component {
               <Button type="primary" onClick={() => {
                 this.setData()
               }}>搜索</Button>
-              <Button style={{marginLeft: 8}} onClick={()=>this.setData()}>
+              <Button style={{marginLeft: 8}} onClick={() => this.setData()}>
                 重置
               </Button>
             </Col>
@@ -218,7 +218,7 @@ export class OrderPaging extends Component {
               total: this.state.pageTotal,
               defaultCurrent: 1,
               pageSize: 5,
-              current:this.state.pageNo,
+              current: this.state.pageNo,
               onChange: (current, pageSize) => {
                 this.pageChange(current, pageSize)
               }
@@ -293,10 +293,10 @@ export class OrderPaging extends Component {
         title: '',
         dataIndex: 'itemImage',
         key: 'itemImage',
-        render:(itemImage)=>{
-          if (itemImage!=null){
+        render: (itemImage) => {
+          if (itemImage != null) {
             return (
-              <img style={{width:"100px",height:"100px"}} src={itemImage} alt=""/>
+              <img style={{width: "100px", height: "100px"}} src={itemImage} alt=""/>
             )
           }
         }

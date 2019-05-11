@@ -56,7 +56,7 @@ export class CommentPaging extends Component {
     dataIndex: 'userName',
     key: 'userName'
   }, {
-    title: '卖家手机号',
+    title: '买家手机号',
     dataIndex: 'extra',
     key: 'buyerPhone',
     render: extra => {

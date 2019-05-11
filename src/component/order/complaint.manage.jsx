@@ -11,6 +11,7 @@ import {ComplaintAdminService} from "../../service/complaint/complaint.admin.ser
 export class ComplaintManage extends Component {
   complaintAdminService = new ComplaintAdminService();
 
+
   componentDidMount() {
     this.setData();
   }
@@ -21,19 +22,19 @@ export class ComplaintManage extends Component {
     loading: true,
     shopIdParam: null,
     userIdParam: null,
-    userMobileParam:null,
+    userMobileParam: null,
     pageTotal: null,
     // 详情页
     detailModalVisible: false,
-    detailData:null
+    detailData: null
   };
 
   setData = (pageNo = 1, pageSize = 5) => {
     let searchParam = {
-      pageNo:pageNo,
-      pageSize:pageSize,
-      shopId:this.state.shopIdParam,
-      userMobile:this.state.userMobileParam
+      pageNo: pageNo,
+      pageSize: pageSize,
+      shopId: this.state.shopIdParam,
+      userMobile: this.state.userMobileParam
     };
     this.setState({
       loading: true
@@ -45,7 +46,7 @@ export class ComplaintManage extends Component {
           data: data.data,
           loading: false,
           pageTotal: data.total,
-          pageNo:pageNo
+          pageNo: pageNo
         })
       }
     });
@@ -55,15 +56,15 @@ export class ComplaintManage extends Component {
     title: '投诉描述',
     dataIndex: 'title',
     key: 'title',
-  },{
+  }, {
     title: '店铺名',
     dataIndex: 'shopName',
     key: 'shopName',
-  },  {
+  }, {
     title: '店铺编号',
     dataIndex: 'shopId',
     key: 'shopId'
-  },{
+  }, {
     title: '投诉人',
     dataIndex: 'nickName',
     key: 'nickName'
@@ -76,7 +77,7 @@ export class ComplaintManage extends Component {
     dataIndex: 'createdAt',
     key: 'createdAt',
     render: createdAt => {
-      return TimeUtil.formatTime(createdAt,true);
+      return TimeUtil.formatTime(createdAt, true);
     }
   }, {
     title: '',
@@ -97,7 +98,7 @@ export class ComplaintManage extends Component {
 
   detailModalClose = () => {
     this.setState({
-      detailData:null,
+      detailData: null,
       detailModalVisible: false
     })
   };
@@ -105,7 +106,7 @@ export class ComplaintManage extends Component {
   getDetailModal = () => {
     const modal = [];
     let detailData = this.state.detailData;
-    if (detailData!=null){
+    if (detailData != null) {
       modal.push(
         <Modal
           visible={this.state.detailModalVisible}
@@ -144,7 +145,7 @@ export class ComplaintManage extends Component {
             </Col>
             <Col span={12} key={"createdAt"}>
               <Form.Item label={`投诉时间`}>
-                <span>{TimeUtil.formatTime(detailData.createdAt,true)}</span>
+                <span>{TimeUtil.formatTime(detailData.createdAt, true)}</span>
               </Form.Item>
             </Col>
           </Row>
