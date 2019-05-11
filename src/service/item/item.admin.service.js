@@ -1,5 +1,4 @@
-import {ItemCommonService} from "./item.common.service";
-import {AbstractRequest} from "../abstract.request";
+import {ItemCommonService} from "./item.common.service"
 
 export class ItemAdminService extends ItemCommonService {
     /**
