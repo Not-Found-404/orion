@@ -1,8 +1,9 @@
 import React from 'react';
 import './shop.create.css';
-import { Card, Form, Input, Button, Select, Row, Col, message } from 'antd';
-import { ShopAdminService } from '../../service/shop/shop.admin.service';
-import { TagAdminService } from "../../service/tag/tag.admin.service";
+import {Card, Form, Input, Button, Select, Row, Col, message} from 'antd';
+import {ShopAdminService} from '../../service/shop/shop.admin.service';
+import {TagAdminService} from "../../service/tag/tag.admin.service";
+
 const Option = Select.Option;
 
 export class ShopCreate extends React.Component {
@@ -95,71 +96,80 @@ export class ShopCreate extends React.Component {
           title="创建店铺"
         >
           <Form layout="vertical" onSubmit={this.handleSubmit}>
-            <Row gutter={{ xs: 8, sm: 16, md: 24 }}>
-              <Col lg={8} md={12}>
-                <Form.Item
-                  label="卖家ID"
-                >
-                  {/* 注册组件 */}
-                  {getFieldDecorator('sellerId', {
-                    rules: [{ required: true, message: '请输入卖家ID' }],
-                  })(
-                    <Input placeholder="卖家ID" />
-                  )}
-                </Form.Item>
-              </Col>
-              <Col lg={8} md={12}>
-                <Form.Item
-                  label="店铺名"
-                >
-                  {getFieldDecorator('shopName', {
-                    rules: [{ required: true, message: '请输入店铺名' }],
-                  })(
-                    <Input placeholder="店铺名" />
-                  )}
-                </Form.Item>
-              </Col>
-              <Col lg={8} md={12}>
-                <Form.Item label="地址">
-                  {getFieldDecorator('shopAddress')(
-                    <Input placeholder="地址" />
-                  )}
-                </Form.Item>
-              </Col>
-              <Col lg={8} md={12}>
-                <Form.Item label="电话">
-                  {getFieldDecorator('shopPhoneNumber')(
-                    <Input placeholder="电话" />
-                  )}
-                </Form.Item>
-              </Col>
-              <Col lg={8} md={12}>
-                <Form.Item label="邮箱">
-                  {getFieldDecorator('shopEmail')(
-                    <Input placeholder="邮箱" />
-                  )}
-                </Form.Item>
-              </Col>
-              <Col lg={8} md={12}>
-                <Form.Item label="店铺标签">
-                  {getFieldDecorator('shopTag',
-                    {
-                      valuePropName: 'checked' // 定义子节点的值的属性
+            <Card title={"卖家信息"}>
+              <Row gutter={{xs: 8, sm: 16, md: 24}}>
+                <Col lg={6} md={12}>
+                  <Form.Item
+                    label="卖家ID"
+                  >
+                    {/* 注册组件 */}
+                    {getFieldDecorator('sellerId', {
+                      rules: [{required: true, message: '请输入卖家ID'}],
                     })(
+                      <Input placeholder="卖家ID"/>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col lg={6} md={12}>
+                  <Form.Item label="电话">
+                    {getFieldDecorator('shopPhoneNumber')(
+                      <Input placeholder="电话"/>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col lg={12} md={12}>
+                  <Form.Item label="邮箱">
+                    {getFieldDecorator('shopEmail')(
+                      <Input placeholder="邮箱"/>
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Card>
+            <br/>
+            <Card title={"店铺信息"}>
+              <Row gutter={{xs: 8, sm: 16, md: 24}}>
+                <Col lg={6} md={12}>
+                  <Form.Item label="店铺标签">
+                    {getFieldDecorator('shopTag',
+                      {
+                        valuePropName: 'checked' // 定义子节点的值的属性
+                      })(
                       <Select
                         mode="multiple"
-                        style={{ width: '100%' }}
+                        style={{width: '100%'}}
                         placeholder="店铺标签"
-                        onChange={() => { }}
+                        onChange={() => {
+                        }}
                       >
                         {this.getOption()}
                       </Select>
                     )}
-                </Form.Item>
-              </Col>
-            </Row>
+                  </Form.Item>
+                </Col>
+                <Col lg={6} md={12}>
+                  <Form.Item
+                    label="店铺名"
+                  >
+                    {getFieldDecorator('shopName', {
+                      rules: [{required: true, message: '请输入店铺名'}],
+                    })(
+                      <Input placeholder="店铺名"/>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col lg={12} md={12}>
+                  <Form.Item label="地址">
+                    {getFieldDecorator('shopAddress')(
+                      <Input placeholder="地址"/>
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Card>
+            <br/>
             <Row type="flex" justify="center">
-              <Col>
+              <Col span={18} style={{textAlign: 'left'}}>
                 <Form.Item>
                   <Button
                     type="primary"
@@ -182,4 +192,4 @@ export class ShopCreate extends React.Component {
  * 创建包装的类
  * @author BillowsTao
  */
-ShopCreate = Form.create({ name: 'shop_create' })(ShopCreate);
+ShopCreate = Form.create({name: 'shop_create'})(ShopCreate);
