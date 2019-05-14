@@ -60,6 +60,7 @@ export class ShopCreate extends React.Component {
             params: createParam, // 传递数据
             success: (data) => { // 成功回调函数
               message.success('成功添加店铺!');
+              this.props.history.push( '/shopManage');
             },
             final: () => {
               // 重置表单状态
@@ -180,7 +181,6 @@ export class ShopCreate extends React.Component {
                 </Form.Item>
               </Col>
             </Row>
-
           </Form>
         </Card>
       </div>
