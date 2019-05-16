@@ -8,6 +8,7 @@ import {UserPaging} from '../../component/user/user.paging';
 import {OrderPaging} from "../../component/order/order.paging";
 import {ComplaintManage} from "../../component/order/complaint.manage";
 import {ShopDetail} from "../../component/order/shop.detail";
+import {PaymentManage} from "../../component/order/payment.manage";
 
 export class HomeRoute extends React.Component {
   render() {
@@ -22,6 +23,7 @@ export class HomeRoute extends React.Component {
         <Route path="/orderManage" component={OrderPaging}/>
         <Route path="/complaintManage" component={ComplaintManage}/>
         <Route path="/shopDetail/:shopId" component={ShopDetail}/>
+        <Route path="/paymentManage" component={PaymentManage}/>
       </div>
     )
   }

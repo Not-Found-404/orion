@@ -19,21 +19,13 @@ export class OrderPaging extends Component {
   }
 
   columns = [{
-    title: '订单id',
+    title: '订单编号',
     dataIndex: 'orderId',
     key: 'orderId',
-  }, {
-    title: '店铺id',
-    dataIndex: 'shopId',
-    key: 'shopId',
   }, {
     title: '店铺名',
     dataIndex: 'shopName',
     key: 'shopName',
-  }, {
-    title: '买家id',
-    dataIndex: 'buyerId',
-    key: 'buyerId',
   }, {
     title: '买家昵称',
     dataIndex: 'buyerName',
@@ -145,22 +137,22 @@ export class OrderPaging extends Component {
     const searchParamsInput = [];
     searchParamsInput.push(
       <Col span={6} key={3}>
-        <Form.Item label={`订单id`}>
-          <Input onChange={this.inputChangeHandler} name="orderIdParam" placeholder="输入订单id"/>
+        <Form.Item label={`订单编号`}>
+          <Input onChange={this.inputChangeHandler} name="orderIdParam" placeholder="输入订单编号"/>
         </Form.Item>
       </Col>
     );
     searchParamsInput.push(
       <Col span={6} key={1}>
-        <Form.Item label={`店铺id`}>
-          <Input onChange={this.inputChangeHandler} name="shopIdParam" placeholder="输入店铺id"/>
+        <Form.Item label={`店铺编号`}>
+          <Input onChange={this.inputChangeHandler} name="shopIdParam" placeholder="输入店铺编号"/>
         </Form.Item>
       </Col>
     );
     searchParamsInput.push(
       <Col span={6} key={2}>
-        <Form.Item label={`买家id`}>
-          <Input onChange={this.inputChangeHandler} name="buyerIdParam" placeholder="输入买家id"/>
+        <Form.Item label={`买家编号`}>
+          <Input onChange={this.inputChangeHandler} name="buyerIdParam" placeholder="输入买家编号"/>
         </Form.Item>
       </Col>
     );
@@ -264,7 +256,7 @@ export class OrderPaging extends Component {
         <Card title={"买家信息"}>
           <Row>
             <Col span={6} key={"buyerId"}>
-              <Form.Item label={`买家id`}>
+              <Form.Item label={`买家编号`}>
                 <span>{orderInfo.buyerId}</span>
               </Form.Item>
             </Col>
@@ -301,7 +293,7 @@ export class OrderPaging extends Component {
           }
         }
       }, {
-        title: '商品id',
+        title: '商品编号',
         dataIndex: 'itemId',
         key: 'itemId'
       }, {
@@ -316,6 +308,27 @@ export class OrderPaging extends Component {
         title: '单价',
         dataIndex: 'paidAmount',
         key: 'paidAmount'
+      }, {
+        title: '',
+        key: 'itemAttribute',
+        dataIndex: 'itemAttribute',
+        render: itemAttribute => {
+          const view = [];
+          console.log("itemAttr:%o", itemAttribute);
+          for (let key in itemAttribute) {
+            view.push(
+              <div>
+                <span>{key}</span>:
+                <span style={{marginLeft: 8}}>{itemAttribute[key]}</span>
+              </div>
+            )
+          }
+          return (
+            <div>
+              {view}
+            </div>
+          )
+        }
       }];
       view.push(
         <Card title={"商品信息"}>
@@ -339,7 +352,7 @@ export class OrderPaging extends Component {
         <Card title="店铺信息">
           <Row>
             <Col span={6} key={"shopId"}>
-              <Form.Item label={`店铺id`}>
+              <Form.Item label={`店铺编号`}>
                 <span>{orderInfo.shopId}</span>
               </Form.Item>
             </Col>
@@ -368,8 +381,8 @@ export class OrderPaging extends Component {
       view.push(
         <Card title="订单信息">
           <Row>
-            <Col span={6} key={"订单id"}>
-              <Form.Item label={`订单id`}>
+            <Col span={6} key={"订单编号"}>
+              <Form.Item label={`订单编号`}>
                 <span>{orderInfo.orderId}</span>
               </Form.Item>
             </Col>
