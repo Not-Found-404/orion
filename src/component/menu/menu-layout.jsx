@@ -19,6 +19,16 @@ export class MenuLayout extends React.Component {
             <Link to="/">用户管理</Link>
           </Menu.Item>
         </SubMenu>
+        <SubMenu key="config" title={<span><Icon type="database" /><span>配置</span></span>}>
+          <Menu.Item key="bannerCreate">
+            {/* 路由链接 */}
+            <Link to="/bannerCreate">创建广告图</Link>
+          </Menu.Item>
+          <Menu.Item key="bannerManage">
+            {/* 路由链接 */}
+            <Link to="/bannerManage">广告图管理</Link>
+          </Menu.Item>
+        </SubMenu>
         <SubMenu key="sub2" title={<span><Icon type="shop" /><span>店铺</span></span>}>
           <Menu.Item key="2">
             <Link to="/shopCreate/">创建店铺</Link>

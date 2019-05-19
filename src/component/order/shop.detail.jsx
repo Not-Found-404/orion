@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import moment from 'moment';
 import {Form, Row, Col, Button, Card, Tabs, Avatar, List,Skeleton} from 'antd';
 import {Link} from "react-router-dom";
 import {ShopAdminService} from "../../service/shop/shop.admin.service";
@@ -152,7 +151,7 @@ export class ShopDetail extends Component {
           <List.Item >
             <Skeleton avatar title={false} loading={false} active>
               <List.Item.Meta
-                avatar={<Avatar src={"http://"+ item.userAvatar} />}
+                avatar={<Avatar src={item.userAvatar} />}
                 title={<a href="https://ant.design">{item.userName}</a>}
                 description={item.context}
               />

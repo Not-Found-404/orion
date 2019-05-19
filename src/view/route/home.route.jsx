@@ -9,6 +9,8 @@ import {OrderPaging} from "../../component/order/order.paging";
 import {ComplaintManage} from "../../component/order/complaint.manage";
 import {ShopDetail} from "../../component/order/shop.detail";
 import {PaymentManage} from "../../component/order/payment.manage";
+import {BannerCreate} from "../../component/config/banner.create";
+import {BannerManage} from "../../component/config/banner.manage";
 
 export class HomeRoute extends React.Component {
   render() {
@@ -24,6 +26,8 @@ export class HomeRoute extends React.Component {
         <Route path="/complaintManage" component={ComplaintManage}/>
         <Route path="/shopDetail/:shopId" component={ShopDetail}/>
         <Route path="/paymentManage" component={PaymentManage}/>
+        <Route path="/bannerCreate" component={BannerCreate}/>
+        <Route path="/bannerManage" component={BannerManage}/>
       </div>
     )
   }

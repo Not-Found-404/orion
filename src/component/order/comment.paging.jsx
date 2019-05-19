@@ -155,7 +155,7 @@ export class CommentPaging extends Component {
           onSubmit={this.handleSearch}
         >
           <Row gutter={24}>{this.getFields()}</Row>
-          <Row>
+          <Row >
             <Col span={24} style={{textAlign: 'right'}}>
               <Button type="primary" onClick={() => {
                 this.setData()

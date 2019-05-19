@@ -32,7 +32,6 @@ export class UserPaging extends Component {
     dataIndex: 'avatar',
     key: 'avatar',
     render: avatar => {
-      avatar = 'http://' + avatar;
       return <Avatar src={avatar} />
     }
   }, {
