@@ -52,8 +52,9 @@ export class AbstractService {
     if (response.success) {
       request.success(response.result);
     } else {
-      if (request.code === 401) {
-        window.open("http:login.qtu404.com?redirectTo=http://admin.qtu404.com","_self")
+      if (response.code === 401 || response.code === "401") {
+        window.open("http://www.qtu404.com?redirectTo="+document.location,"_self");
+        return;
       }
       if (request.error && typeof request.error === "function") {
         request.error(response);
