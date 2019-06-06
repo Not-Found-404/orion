@@ -1,5 +1,5 @@
 import React from 'react';
-import {Layout, Icon} from 'antd';
+import {Layout, Icon, Avatar, Button, Popover} from 'antd';
 import {MenuLayout} from '../../component/menu/menu-layout';
 import {BrowserRouter as Router} from "react-router-dom";
 import {HomeRoute} from "../route/home.route";
@@ -14,10 +14,12 @@ const {
 export class Home extends React.Component {
   state = {
     collapsed: false,
+    userInfo: null,
   };
 
   // todo 测试用，直接登录管路员账号
   userAdminService = new UserAdminService();
+
   componentDidMount() {
     // this.userAdminService.login({
     //   params: {
@@ -25,8 +27,17 @@ export class Home extends React.Component {
     //     password: "1",
     //     type: 3
     //   },
-    //   success: (data) => {}
-    // })
+    //   success: (data) => {
+    //   }
+    // });
+    this.userAdminService.getUserInfo({
+      params: {},
+      success: (data) => {
+        this.setState({
+          userInfo: data
+        })
+      }
+    });
   }
 
   /* 展开侧边栏函数 */
@@ -34,6 +45,34 @@ export class Home extends React.Component {
     this.setState({
       collapsed: !this.state.collapsed,
     });
+  };
+
+  getLogoutButton = () => {
+    const x = [];
+    const content = (
+      <div>
+        <Button icon="logout" onClick={() => {
+          this.userAdminService.logout({
+            params: {},
+            success: () => {
+              window.open("http://login.qtu404.com?redirectTo="+document.location,"_self");
+            }
+          });
+        }}>退出登录</Button>
+      </div>
+    );
+    let userInfo = this.state.userInfo;
+    if (userInfo !== null) {
+      x.push(
+        <Popover content={content}>
+          <span style={{float: "right", marginRight: "5%"}}>
+            <Avatar src={userInfo.avatar} style={{marginRight: "15px"}}/>
+            <span style={{marginRight: "15px"}}>{userInfo.nickname}</span>
+          </span>
+        </Popover>,
+      );
+    }
+    return x;
   };
 
   render() {
@@ -62,6 +101,7 @@ export class Home extends React.Component {
                 type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
                 onClick={this.toggleSider}
               />
+              {this.getLogoutButton()}
             </Header>
             <Content className="layout-main">
               {/* 路由切换组件区域 */}
