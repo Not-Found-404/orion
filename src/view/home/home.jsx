@@ -19,14 +19,14 @@ export class Home extends React.Component {
   // todo 测试用，直接登录管路员账号
   userAdminService = new UserAdminService();
   componentDidMount() {
-    this.userAdminService.login({
-      params: {
-        mobile: "admin",
-        password: "1",
-        type: 3
-      },
-      success: (data) => {}
-    })
+    // this.userAdminService.login({
+    //   params: {
+    //     mobile: "admin",
+    //     password: "1",
+    //     type: 3
+    //   },
+    //   success: (data) => {}
+    // })
   }
 
   /* 展开侧边栏函数 */
